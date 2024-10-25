@@ -305,9 +305,15 @@ extension MainViewController {
         }
         
         enum Color {
-            static let interface        = UIColor.gray
-            static let findButton       = UIColor.orange
-            static let selectedItem     = UIColor.darkGray
+            static let interface    = UIColor(red: (230.0 / 255.0),
+                                              green: (230.0 / 255.0),
+                                              blue: (235.0 / 255.0),
+                                              alpha: 1)
+            static let findButton   = UIColor(red: (250.0 / 255.0),
+                                              green: (190.0 / 255.0),
+                                              blue: (40.0 / 255.0),
+                                              alpha: 1)
+            static let selectedItem = UIColor.darkGray
             
             enum Text {
                 static let title        = UIColor.black
