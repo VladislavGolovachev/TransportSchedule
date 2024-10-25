@@ -12,17 +12,18 @@ final class MainViewController: UIViewController {
     
     let titleLabel = {
         let label = UILabel()
-        label.text = "Расписание пригородного и\nмеждугородного транспорта"
-        label.font = Constants.Font.title
+        label.text = "Расписание пригородного и междугородного транспорта"
         label.textColor = Constants.Color.Text.title
+        label.font = Constants.Font.title
+        
         label.numberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
         
         return label
     }()
     
     let fromTextField = {
         let textField = UITextField()
-//        textField.backgroundColor = .red
         textField.placeholder = "Откуда"
         textField.font = Constants.Font.common
         
@@ -30,7 +31,6 @@ final class MainViewController: UIViewController {
     }()
     let whereTextField = {
         let textField = UITextField()
-//        textField.backgroundColor = .blue
         textField.placeholder = "Куда"
         textField.font = Constants.Font.common
         
@@ -45,6 +45,107 @@ final class MainViewController: UIViewController {
         return button
     }()
     
+    let dateSegmentedControl: UISegmentedControl = {
+        let segmentedControl = UISegmentedControl()
+        
+        segmentedControl.layer.cornerRadius = 0
+        segmentedControl.layer.borderColor = UIColor.white.cgColor
+        segmentedControl.layer.borderWidth = 1
+        segmentedControl.layer.masksToBounds = true
+        
+        segmentedControl.backgroundColor = Constants.Color.interface
+        segmentedControl.selectedSegmentTintColor = Constants.Color.selectedItem
+        
+        segmentedControl.insertSegment(withTitle: "Сегодня", at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: "Завтра", at: 1, animated: false)
+        segmentedControl.insertSegment(withTitle: "Дата", at: 2, animated: false)
+        segmentedControl.selectedSegmentIndex = 0
+        
+        let normalTextAttributes: [NSAttributedString.Key: Any] = [
+            .font: Constants.Font.common,
+            .foregroundColor: Constants.Color.Text.notSelected
+        ]
+        let selectedTextAttributes: [NSAttributedString.Key: Any] = [
+            .font: Constants.Font.common,
+            .foregroundColor: Constants.Color.Text.selected
+        ]
+        segmentedControl.setTitleTextAttributes(normalTextAttributes, for: .normal)
+        segmentedControl.setTitleTextAttributes(selectedTextAttributes, for: .selected)
+        
+        return segmentedControl
+    }()
+    
+    let anyButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = Constants.directionalEdgeInsets
+        button.configuration = config
+        
+        button.setTitle("любой", for: .normal)
+        button.setTitleColor(Constants.Color.Text.selected, for: .normal)
+        button.backgroundColor = Constants.Color.selectedItem
+        
+        return button
+    }()
+    let planeButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        let image = UIImage(systemName: "airplane")
+        button.setImage(image, for: .normal)
+        button.backgroundColor = Constants.Color.interface
+        
+        return button
+    }()
+    let trainButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        let image = UIImage(systemName: "train.side.front.car")
+        button.setImage(image, for: .normal)
+        button.backgroundColor = Constants.Color.interface
+        
+        return button
+    }()
+    let lightrailButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        let image = UIImage(systemName: "lightrail.fill")
+        button.setImage(image, for: .normal)
+        button.backgroundColor = Constants.Color.interface
+        
+        return button
+    }()
+    let busButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        let image = UIImage(systemName: "bus.fill")
+        button.setImage(image, for: .normal)
+        button.backgroundColor = Constants.Color.interface
+        
+        return button
+    }()
+    
+    let findButton = {
+        let button = UIButton()
+        button.layer.cornerRadius = Constants.cornerRadius
+        
+        var config = UIButton.Configuration.plain()
+        config.contentInsets = Constants.directionalEdgeInsets
+        button.configuration = config
+        
+        button.setTitle("Найти", for: .normal)
+        button.setTitleColor(Constants.Color.Text.notSelected, for: .normal)
+        button.setTitleColor(Constants.Color.Text.selected, for: .highlighted)
+        button.backgroundColor = Constants.Color.findButton
+        
+        return button
+    }()
+    
     private lazy var textFieldStackView: UIStackView = {
         let separator = UIView()
         separator.backgroundColor = Constants.Color.interface
@@ -55,8 +156,8 @@ final class MainViewController: UIViewController {
         stackView.distribution = .equalSpacing
         
         separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.heightAnchor.constraint(equalToConstant: 1).isActive              = true
-        separator.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive   = true
+        separator.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separator.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
         
         return stackView
     }()
@@ -73,17 +174,20 @@ final class MainViewController: UIViewController {
         return view
     }()
     
-//    private lazy var buttonStackView: UIStackView = {
-//        let stackView = UIStackView()
-//        
-//        return stackView
-//    }()
-//    
-//    private lazy var screenStackView: UIStackView = {
-//        let stackView = UIStackView()
-//        
-//        return stackView
-//    }()
+    private lazy var buttonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            planeButton,
+            trainButton,
+            lightrailButton,
+            busButton
+        ])
+        
+        stackView.spacing = Constants.Spacing.buttonStack
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        
+        return stackView
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,6 +211,10 @@ extension MainViewController {
         
         view.addSubview(titleLabel)
         view.addSubview(routeMenuView)
+        view.addSubview(dateSegmentedControl)
+        view.addSubview(anyButton)
+        view.addSubview(buttonStackView)
+        view.addSubview(findButton)
     }
     
     private func setupConstraints() {
@@ -114,6 +222,10 @@ extension MainViewController {
         routeMenuView.translatesAutoresizingMaskIntoConstraints         = false
         textFieldStackView.translatesAutoresizingMaskIntoConstraints    = false
         switchButton.translatesAutoresizingMaskIntoConstraints          = false
+        dateSegmentedControl.translatesAutoresizingMaskIntoConstraints  = false
+        anyButton.translatesAutoresizingMaskIntoConstraints             = false
+        buttonStackView.translatesAutoresizingMaskIntoConstraints       = false
+        findButton.translatesAutoresizingMaskIntoConstraints            = false
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
@@ -145,6 +257,33 @@ extension MainViewController {
                                                          constant: -Constants.Spacing.routeMenu),
             textFieldStackView.bottomAnchor.constraint(equalTo: routeMenuView.bottomAnchor,
                                                        constant: -Constants.Padding.RouteMenu.bottom),
+            
+            dateSegmentedControl.topAnchor.constraint(equalTo: routeMenuView.bottomAnchor,
+                                                      constant: Constants.Spacing.global),
+            dateSegmentedControl.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                          constant: Constants.Padding.Global.left),
+            dateSegmentedControl.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                           constant: -Constants.Padding.Global.right),
+            dateSegmentedControl.heightAnchor.constraint(equalToConstant: 40),
+            
+            anyButton.topAnchor.constraint(equalTo: dateSegmentedControl.bottomAnchor,
+                                                 constant: Constants.Spacing.global),
+            anyButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                     constant: Constants.Padding.Global.left),
+            
+            buttonStackView.topAnchor.constraint(equalTo: anyButton.topAnchor),
+            buttonStackView.leadingAnchor.constraint(equalTo: anyButton.trailingAnchor,
+                                                     constant: Constants.Spacing.buttonStack),
+            buttonStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                      constant:  -Constants.Padding.Global.right),
+            buttonStackView.bottomAnchor.constraint(equalTo: anyButton.bottomAnchor),
+            
+            findButton.topAnchor.constraint(equalTo: anyButton.bottomAnchor,
+                                            constant: Constants.Spacing.global),
+            findButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
+                                                constant: Constants.Padding.Global.left),
+            findButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                            constant: -Constants.Padding.Global.right)
         ])
     }
 }
@@ -152,18 +291,22 @@ extension MainViewController {
 //MARK: Private Constants
 extension MainViewController {
     private enum Constants {
+        static let directionalEdgeInsets = NSDirectionalEdgeInsets(top: 15,
+                                                               leading: 15,
+                                                               bottom: 15,
+                                                               trailing: 15)
         static let switchButtonSize = CGSize(width: 25, height: 25)
-        static let cornerRadius: CGFloat            = 6
+        static let cornerRadius: CGFloat            = 5
         static let routeMenuBorderWidth: CGFloat    = 2
         
         enum Font {
-            static let title    = UIFont.systemFont(ofSize: 20, weight: .heavy)
+            static let title    = UIFont.systemFont(ofSize: 18, weight: .heavy)
             static let common   = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
         
         enum Color {
-            static let interface        = UIColor.lightGray
-            static let findButton       = UIColor.yellow
+            static let interface        = UIColor.gray
+            static let findButton       = UIColor.orange
             static let selectedItem     = UIColor.darkGray
             
             enum Text {
