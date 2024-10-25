@@ -24,15 +24,29 @@ final class MainViewController: UIViewController {
     
     let fromTextField = {
         let textField = UITextField()
-        textField.placeholder = "Откуда"
-        textField.font = Constants.Font.common
+        textField.font = Constants.Font.textField
+        textField.autocorrectionType = .no
+        
+        let placeholderAttributes = [
+            NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
+        ]
+        let attributedString = NSAttributedString(string: "Откуда",
+                                                  attributes: placeholderAttributes)
+        textField.attributedPlaceholder = attributedString
         
         return textField
     }()
     let whereTextField = {
         let textField = UITextField()
-        textField.placeholder = "Куда"
-        textField.font = Constants.Font.common
+        textField.font = Constants.Font.textField
+        textField.autocorrectionType = .no
+        
+        let placeholderAttributes = [
+            NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
+        ]
+        let attributedString = NSAttributedString(string: "Куда",
+                                                  attributes: placeholderAttributes)
+        textField.attributedPlaceholder = attributedString
         
         return textField
     }()
@@ -45,47 +59,40 @@ final class MainViewController: UIViewController {
         return button
     }()
     
-    let dateSegmentedControl: UISegmentedControl = {
-        let segmentedControl = UISegmentedControl()
+    lazy var dateSegmentedControl: UISegmentedControl = {
+        let segmentedControl = CustomSegmentedControl(cornerRadius: Constants.cornerRadius)
         
-        segmentedControl.layer.cornerRadius = 0
-        segmentedControl.layer.borderColor = UIColor.white.cgColor
-        segmentedControl.layer.borderWidth = 1
-        segmentedControl.layer.masksToBounds = true
+        //Cos Apple's UISegmentedControl makes color darker
+        segmentedControl.backgroundColor = Constants.Color.interface.withAlphaComponent(0.4)
+        segmentedControl.setSelectedSegmentColor(Constants.Color.selectedItem)
         
-        segmentedControl.backgroundColor = Constants.Color.interface
-        segmentedControl.selectedSegmentTintColor = Constants.Color.selectedItem
-        
-        segmentedControl.insertSegment(withTitle: "Сегодня", at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: "Сегодня",at: 0, animated: false)
         segmentedControl.insertSegment(withTitle: "Завтра", at: 1, animated: false)
         segmentedControl.insertSegment(withTitle: "Дата", at: 2, animated: false)
         segmentedControl.selectedSegmentIndex = 0
         
-        let normalTextAttributes: [NSAttributedString.Key: Any] = [
-            .font: Constants.Font.common,
-            .foregroundColor: Constants.Color.Text.notSelected
-        ]
-        let selectedTextAttributes: [NSAttributedString.Key: Any] = [
-            .font: Constants.Font.common,
-            .foregroundColor: Constants.Color.Text.selected
-        ]
-        segmentedControl.setTitleTextAttributes(normalTextAttributes, for: .normal)
+        segmentedControl.setTitleTextAttributes(notSelectedTextAttributes, for: .normal)
         segmentedControl.setTitleTextAttributes(selectedTextAttributes, for: .selected)
         
         return segmentedControl
     }()
     
-    let anyButton = {
+    lazy var anyButton = {
         let button = UIButton()
+        button.backgroundColor = Constants.Color.selectedItem
         button.layer.cornerRadius = Constants.cornerRadius
         
         var config = UIButton.Configuration.plain()
         config.contentInsets = Constants.directionalEdgeInsets
         button.configuration = config
         
-        button.setTitle("любой", for: .normal)
-        button.setTitleColor(Constants.Color.Text.selected, for: .normal)
-        button.backgroundColor = Constants.Color.selectedItem
+        let attrString =
+        NSAttributedString(string: "любой",
+                           attributes: selectedTextAttributes)
+        button.setAttributedTitle(attrString,
+                                  for: .normal)
+        button.setAttributedTitle(attrString,
+                                  for: .highlighted)
         
         return button
     }()
@@ -130,18 +137,27 @@ final class MainViewController: UIViewController {
         return button
     }()
     
-    let findButton = {
+    lazy var findButton = {
         let button = UIButton()
+        button.backgroundColor = Constants.Color.findButton
         button.layer.cornerRadius = Constants.cornerRadius
         
         var config = UIButton.Configuration.plain()
         config.contentInsets = Constants.directionalEdgeInsets
         button.configuration = config
         
-        button.setTitle("Найти", for: .normal)
-        button.setTitleColor(Constants.Color.Text.notSelected, for: .normal)
-        button.setTitleColor(Constants.Color.Text.selected, for: .highlighted)
-        button.backgroundColor = Constants.Color.findButton
+        let findString = "Найти"
+        let normalAttrString =
+        NSAttributedString(string: findString,
+                           attributes: notSelectedTextAttributes)
+        let highlightedAttrString =
+        NSAttributedString(string: findString,
+                           attributes: selectedTextAttributes)
+        
+        button.setAttributedTitle(normalAttrString,
+                                  for: .normal)
+        button.setAttributedTitle(highlightedAttrString,
+                                  for: .highlighted)
         
         return button
     }()
@@ -203,8 +219,17 @@ extension MainViewController: MainViewProtocol {
     
 }
 
-//MARK: Private Functions
+//MARK: Private Functions and Variables
 extension MainViewController {
+    private var selectedTextAttributes: [NSAttributedString.Key: Any] {[
+        .font: Constants.Font.common,
+        .foregroundColor: Constants.Color.Text.selected
+    ]}
+    private var notSelectedTextAttributes: [NSAttributedString.Key: Any] {[
+        .font: Constants.Font.common,
+        .foregroundColor: Constants.Color.Text.notSelected
+    ]}
+    
     private func addSubviews() {
         routeMenuView.addSubview(textFieldStackView)
         routeMenuView.addSubview(switchButton)
@@ -254,7 +279,7 @@ extension MainViewController {
             textFieldStackView.leadingAnchor.constraint(equalTo: routeMenuView.leadingAnchor,
                                                         constant: Constants.Padding.RouteMenu.left),
             textFieldStackView.trailingAnchor.constraint(equalTo: switchButton.leadingAnchor,
-                                                         constant: -Constants.Spacing.routeMenu),
+                                                         constant: -Constants.Padding.RouteMenu.left),
             textFieldStackView.bottomAnchor.constraint(equalTo: routeMenuView.bottomAnchor,
                                                        constant: -Constants.Padding.RouteMenu.bottom),
             
@@ -264,26 +289,28 @@ extension MainViewController {
                                                           constant: Constants.Padding.Global.left),
             dateSegmentedControl.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
                                                            constant: -Constants.Padding.Global.right),
-            dateSegmentedControl.heightAnchor.constraint(equalToConstant: 40),
+            dateSegmentedControl.heightAnchor.constraint(equalToConstant: Constants.itemHeight),
             
             anyButton.topAnchor.constraint(equalTo: dateSegmentedControl.bottomAnchor,
                                                  constant: Constants.Spacing.global),
             anyButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                      constant: Constants.Padding.Global.left),
-            
+            anyButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight),
+                        
             buttonStackView.topAnchor.constraint(equalTo: anyButton.topAnchor),
             buttonStackView.leadingAnchor.constraint(equalTo: anyButton.trailingAnchor,
                                                      constant: Constants.Spacing.buttonStack),
             buttonStackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
                                                       constant:  -Constants.Padding.Global.right),
-            buttonStackView.bottomAnchor.constraint(equalTo: anyButton.bottomAnchor),
+            buttonStackView.heightAnchor.constraint(equalToConstant: Constants.itemHeight),
             
             findButton.topAnchor.constraint(equalTo: anyButton.bottomAnchor,
                                             constant: Constants.Spacing.global),
             findButton.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor,
                                                 constant: Constants.Padding.Global.left),
             findButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
-                                            constant: -Constants.Padding.Global.right)
+                                            constant: -Constants.Padding.Global.right),
+            findButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight)
         ])
     }
 }
@@ -291,22 +318,24 @@ extension MainViewController {
 //MARK: Private Constants
 extension MainViewController {
     private enum Constants {
-        static let directionalEdgeInsets = NSDirectionalEdgeInsets(top: 15,
-                                                               leading: 15,
-                                                               bottom: 15,
-                                                               trailing: 15)
         static let switchButtonSize = CGSize(width: 25, height: 25)
-        static let cornerRadius: CGFloat            = 5
+        static let directionalEdgeInsets = NSDirectionalEdgeInsets(top: 15,
+                                                                   leading: 15,
+                                                                   bottom: 15,
+                                                                   trailing: 15)
+        static let itemHeight: CGFloat              = 50
+        static let cornerRadius: CGFloat            = 4
         static let routeMenuBorderWidth: CGFloat    = 2
         
         enum Font {
-            static let title    = UIFont.systemFont(ofSize: 18, weight: .heavy)
-            static let common   = UIFont.systemFont(ofSize: 14, weight: .regular)
+            static let title        = UIFont.systemFont(ofSize: 18, weight: .heavy)
+            static let textField    = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            static let common       = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
         
         enum Color {
-            static let interface    = UIColor(red: (230.0 / 255.0),
-                                              green: (230.0 / 255.0),
+            static let interface    = UIColor(red: (235.0 / 255.0),
+                                              green: (235.0 / 255.0),
                                               blue: (235.0 / 255.0),
                                               alpha: 1)
             static let findButton   = UIColor(red: (250.0 / 255.0),
@@ -314,6 +343,7 @@ extension MainViewController {
                                               blue: (40.0 / 255.0),
                                               alpha: 1)
             static let selectedItem = UIColor.darkGray
+            static let placeholder  = UIColor.lightGray
             
             enum Text {
                 static let title        = UIColor.black
