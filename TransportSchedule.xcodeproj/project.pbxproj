@@ -18,6 +18,7 @@
 		823AE7572CCA3D5000754161 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7562CCA3D5000754161 /* Base */; };
 		823AE7612CCA3E1900754161 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7602CCA3E1900754161 /* .gitignore */; };
 		823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D42CCCFEE10005DF41 /* NetworkManager.swift */; };
+		823B33D82CCD1D8F0005DF41 /* RouteInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */; };
 		82B04A372CCA539A008CD974 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A362CCA5398008CD974 /* Router.swift */; };
 		82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A382CCA53F5008CD974 /* Assembly.swift */; };
 		82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */; };
@@ -37,6 +38,7 @@
 		823AE7582CCA3D5000754161 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		823AE7602CCA3E1900754161 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		823B33D42CCCFEE10005DF41 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteInfoCell.swift; sourceTree = "<group>"; };
 		82B04A362CCA5398008CD974 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		82B04A382CCA53F5008CD974 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				8234004C2CCC66BF00D33B70 /* ScheduleViewController.swift */,
+				823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -239,6 +242,7 @@
 				82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */,
 				8234004D2CCC66BF00D33B70 /* ScheduleViewController.swift in Sources */,
 				823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */,
+				823B33D82CCD1D8F0005DF41 /* RouteInfoCell.swift in Sources */,
 				823AE74F2CCA3D4D00754161 /* MainViewController.swift in Sources */,
 				82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */,
 				823AE74B2CCA3D4D00754161 /* AppDelegate.swift in Sources */,

@@ -15,7 +15,8 @@ final class ScheduleViewController: UIViewController {
         tableView.allowsSelection = false
         
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "RouteInfoCell")
+        tableView.delegate = self
+        tableView.register(RouteInfoCell.self, forCellReuseIdentifier: "RouteInfoCell")
         
         return tableView
     }()
@@ -45,11 +46,13 @@ extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteInfoCell", for: indexPath)
         
-        var config = cell.defaultContentConfiguration()
-        config.text = "Moscow - Vladivostok"
-        cell.contentConfiguration = config
-        
         return cell
+    }
+}
+
+extension ScheduleViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 
@@ -76,10 +79,11 @@ extension ScheduleViewController {
     
     private func customizeNavBar() {
         let backButton = UIButton(type: .system)
+        
+        backButton.addTarget(self, action: #selector(backAction), for: .touchUpInside)
         backButton.setTitle("Назад", for: .normal)
         backButton.setImage(UIImage(systemName: "chevron.backward"),
                             for: .normal)
-        backButton.addTarget(self, action: #selector(backAction), for: .touchUpInside)
         
         let topItem = navigationController?.navigationBar.topItem
         topItem?.title = Constants.navBarTitle
