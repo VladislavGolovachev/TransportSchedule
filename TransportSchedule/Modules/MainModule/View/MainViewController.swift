@@ -207,8 +207,8 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
         
+        view.backgroundColor = .white
         findButton.addTarget(self, action: #selector(findAction), for: .touchUpInside)
         
         addSubviews()
@@ -324,7 +324,7 @@ extension MainViewController {
     }
 }
 
-//MARK: Private Constants
+//MARK: Private Local Constants
 extension MainViewController {
     private enum Constants {
         static let switchButtonSize = CGSize(width: 25, height: 25)
