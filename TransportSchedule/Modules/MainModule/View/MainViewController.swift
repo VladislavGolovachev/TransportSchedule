@@ -91,8 +91,6 @@ final class MainViewController: UIViewController {
                            attributes: selectedTextAttributes)
         button.setAttributedTitle(attrString,
                                   for: .normal)
-        button.setAttributedTitle(attrString,
-                                  for: .highlighted)
         
         return button
     }()
@@ -100,7 +98,7 @@ final class MainViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = Constants.cornerRadius
         
-        let image = UIImage(systemName: "airplane")
+        let image = UIImage(named: "DarkPlane")
         button.setImage(image, for: .normal)
         button.backgroundColor = Constants.Color.interface
         
@@ -110,17 +108,17 @@ final class MainViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = Constants.cornerRadius
         
-        let image = UIImage(systemName: "train.side.front.car")
+        let image = UIImage(named: "DarkTrain")
         button.setImage(image, for: .normal)
         button.backgroundColor = Constants.Color.interface
         
         return button
     }()
-    let lightrailButton = {
+    let suburbanButton = {
         let button = UIButton()
         button.layer.cornerRadius = Constants.cornerRadius
         
-        let image = UIImage(systemName: "lightrail.fill")
+        let image = UIImage(named: "DarkSuburban")
         button.setImage(image, for: .normal)
         button.backgroundColor = Constants.Color.interface
         
@@ -130,7 +128,7 @@ final class MainViewController: UIViewController {
         let button = UIButton()
         button.layer.cornerRadius = Constants.cornerRadius
         
-        let image = UIImage(systemName: "bus.fill")
+        let image = UIImage(named: "DarkBus")
         button.setImage(image, for: .normal)
         button.backgroundColor = Constants.Color.interface
         
@@ -194,7 +192,7 @@ final class MainViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [
             planeButton,
             trainButton,
-            lightrailButton,
+            suburbanButton,
             busButton
         ])
         
@@ -209,8 +207,8 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        findButton.addTarget(self, action: #selector(findAction), for: .touchUpInside)
         
+        addTargets()
         addSubviews()
         setupConstraints()
     }
@@ -226,6 +224,58 @@ extension MainViewController {
     @objc func findAction() {
         presenter?.showScheduleScreen()
     }
+    
+    @objc func anyTravelChosen() {
+        unselectButtons()
+        
+        anyButton.backgroundColor = Constants.Color.selectedItem
+        let attrString =
+        NSAttributedString(string: "любой",
+                           attributes: selectedTextAttributes)
+        anyButton.setAttributedTitle(attrString, for: .normal)
+        
+        animateButton(anyButton)
+    }
+    
+    @objc func flightChosen() {
+        unselectButtons()
+        
+        planeButton.backgroundColor = Constants.Color.selectedItem
+        planeButton.setImage(UIImage(named: "LightPlane"),
+                             for: .normal)
+        
+        animateButton(planeButton)
+    }
+    
+    @objc func trainChosen() {
+        unselectButtons()
+        
+        trainButton.backgroundColor = Constants.Color.selectedItem
+        trainButton.setImage(UIImage(named: "LightTrain"),
+                             for: .normal)
+        
+        animateButton(trainButton)
+    }
+    
+    @objc func suburbanChosen() {
+        unselectButtons()
+        
+        suburbanButton.backgroundColor = Constants.Color.selectedItem
+        suburbanButton.setImage(UIImage(named: "LightSuburban"),
+                                for: .normal)
+        
+        animateButton(suburbanButton)
+    }
+    
+    @objc func busChosen() {
+        unselectButtons()
+        
+        busButton.backgroundColor = Constants.Color.selectedItem
+        busButton.setImage(UIImage(named: "LightBus"),
+                           for: .normal)
+        
+        animateButton(busButton)
+    }
 }
 
 //MARK: Private Functions and Variables
@@ -238,6 +288,56 @@ extension MainViewController {
         .font: Constants.Font.common,
         .foregroundColor: Constants.Color.Text.notSelected
     ]}
+    
+    private func animateButton(_ button: UIButton) {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) {
+            button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
+        } completion: { _ in
+            button.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+    }
+    
+    private func unselectButtons() {
+        anyButton.backgroundColor = Constants.Color.interface
+        let attrString =
+        NSAttributedString(string: "любой",
+                           attributes: notSelectedTextAttributes)
+        anyButton.setAttributedTitle(attrString, for: .normal)
+        
+        planeButton.backgroundColor = Constants.Color.interface
+        planeButton.setImage(UIImage(named: "DarkPlane"),
+                             for: .normal)
+        trainButton.backgroundColor = Constants.Color.interface
+        trainButton.setImage(UIImage(named: "DarkTrain"),
+                             for: .normal)
+        suburbanButton.backgroundColor = Constants.Color.interface
+        suburbanButton.setImage(UIImage(named: "DarkSuburban"),
+                                for: .normal)
+        busButton.backgroundColor = Constants.Color.interface
+        busButton.setImage(UIImage(named: "DarkBus"),
+                           for: .normal)
+    }
+    
+    private func addTargets() {
+        findButton.addTarget(self,
+                             action: #selector(findAction),
+                             for: .touchUpInside)
+        anyButton.addTarget(self,
+                            action: #selector(anyTravelChosen),
+                            for: .touchUpInside)
+        planeButton.addTarget(self,
+                              action: #selector(flightChosen),
+                              for: .touchUpInside)
+        trainButton.addTarget(self,
+                              action: #selector(trainChosen),
+                              for: .touchUpInside)
+        suburbanButton.addTarget(self,
+                                 action: #selector(suburbanChosen),
+                                 for: .touchUpInside)
+        busButton.addTarget(self,
+                            action: #selector(busChosen),
+                            for: .touchUpInside)
+    }
     
     private func addSubviews() {
         routeMenuView.addSubview(textFieldStackView)

@@ -14,11 +14,11 @@
 		823AE74B2CCA3D4D00754161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74A2CCA3D4D00754161 /* AppDelegate.swift */; };
 		823AE74D2CCA3D4D00754161 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74C2CCA3D4D00754161 /* SceneDelegate.swift */; };
 		823AE74F2CCA3D4D00754161 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74E2CCA3D4D00754161 /* MainViewController.swift */; };
-		823AE7542CCA3D5000754161 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7532CCA3D5000754161 /* Assets.xcassets */; };
 		823AE7572CCA3D5000754161 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7562CCA3D5000754161 /* Base */; };
 		823AE7612CCA3E1900754161 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7602CCA3E1900754161 /* .gitignore */; };
 		823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D42CCCFEE10005DF41 /* NetworkManager.swift */; };
 		823B33D82CCD1D8F0005DF41 /* RouteInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */; };
+		823B33DA2CCD6A9E0005DF41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 823B33D92CCD6A9E0005DF41 /* Assets.xcassets */; };
 		82B04A372CCA539A008CD974 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A362CCA5398008CD974 /* Router.swift */; };
 		82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A382CCA53F5008CD974 /* Assembly.swift */; };
 		82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */; };
@@ -33,12 +33,12 @@
 		823AE74A2CCA3D4D00754161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		823AE74C2CCA3D4D00754161 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		823AE74E2CCA3D4D00754161 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		823AE7532CCA3D5000754161 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		823AE7562CCA3D5000754161 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		823AE7582CCA3D5000754161 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		823AE7602CCA3E1900754161 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		823B33D42CCCFEE10005DF41 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteInfoCell.swift; sourceTree = "<group>"; };
+		823B33D92CCD6A9E0005DF41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82B04A362CCA5398008CD974 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		82B04A382CCA53F5008CD974 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -89,8 +89,8 @@
 				82B04A362CCA5398008CD974 /* Router.swift */,
 				823B33D62CCCFEEA0005DF41 /* NetworkLayer */,
 				82B04A3D2CCA6407008CD974 /* Modules */,
-				823400492CCC52D200D33B70 /* Extensions */,
-				823AE7532CCA3D5000754161 /* Assets.xcassets */,
+				823B33DB2CCD9D070005DF41 /* Other */,
+				823B33D92CCD6A9E0005DF41 /* Assets.xcassets */,
 				823AE7552CCA3D5000754161 /* LaunchScreen.storyboard */,
 				823AE7582CCA3D5000754161 /* Info.plist */,
 			);
@@ -103,6 +103,14 @@
 				823B33D42CCCFEE10005DF41 /* NetworkManager.swift */,
 			);
 			path = NetworkLayer;
+			sourceTree = "<group>";
+		};
+		823B33DB2CCD9D070005DF41 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				823400492CCC52D200D33B70 /* Extensions */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 		82B04A3A2CCA57C0008CD974 /* MainModule */ = {
@@ -225,7 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				823AE7612CCA3E1900754161 /* .gitignore in Resources */,
-				823AE7542CCA3D5000754161 /* Assets.xcassets in Resources */,
+				823B33DA2CCD6A9E0005DF41 /* Assets.xcassets in Resources */,
 				823AE7572CCA3D5000754161 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
