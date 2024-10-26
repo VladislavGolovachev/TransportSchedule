@@ -14,6 +14,7 @@ final class ScheduleViewController: UIViewController {
         
         tableView.allowsSelection = false
         
+        tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(RouteInfoCell.self, forCellReuseIdentifier: "RouteInfoCell")

@@ -18,7 +18,10 @@ class RouteInfoCell: UITableViewCell {
     }()
     let routeLabel = {
         let label = UILabel()
+        
         label.text = "Город отправления - город прибытия"
+        label.font = Constants.Font.route
+        label.textColor = Constants.Color.primaryText
         
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -27,7 +30,10 @@ class RouteInfoCell: UITableViewCell {
     }()
     let carrierLabel = {
         let label = UILabel()
+        
         label.text = "Компания перевозки"
+        label.font = Constants.Font.carrier
+        label.textColor = Constants.Color.primaryText
         
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -36,7 +42,10 @@ class RouteInfoCell: UITableViewCell {
     }()
     let transportLabel = {
         let label = UILabel()
+        
         label.text = "Транспорт"
+        label.font = Constants.Font.transport
+        label.textColor = Constants.Color.secondaryText
         
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -45,37 +54,55 @@ class RouteInfoCell: UITableViewCell {
     }()
     let departureDateLabel = {
         let label = UILabel()
+        
         label.text = "1 янв."
+        label.font = Constants.Font.date
+        label.textColor = Constants.Color.secondaryText
         
         return label
     }()
     let departureTimeLabel = {
         let label = UILabel()
+        
         label.text = "00:00"
+        label.font = Constants.Font.departureTime
+        label.textColor = Constants.Color.primaryText
         
         return label
     }()
     let arrivalDateLabel = {
         let label = UILabel()
+        
         label.text = "1 янв."
+        label.font = Constants.Font.date
+        label.textColor = Constants.Color.secondaryText
         
         return label
     }()
     let arrivalTimeLabel = {
         let label = UILabel()
+        
         label.text = "00:00"
+        label.font = Constants.Font.arrivalTime
+        label.textColor = Constants.Color.primaryText
         
         return label
     }()
     let durationLabel = {
         let label = UILabel()
+        
         label.text = "0 часов"
+        label.font = Constants.Font.duration
+        label.textColor = Constants.Color.secondaryText
         
         return label
     }()
     let departureStationLabel = {
         let label = UILabel()
+        
         label.text = "Пункт отбытия"
+        label.font = Constants.Font.station
+        label.textColor = Constants.Color.primaryText
         
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -84,7 +111,10 @@ class RouteInfoCell: UITableViewCell {
     }()
     let arrivalStationLabel = {
         let label = UILabel()
+        
         label.text = "Пункт прибытия"
+        label.font = Constants.Font.station
+        label.textColor = Constants.Color.primaryText
         
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -212,16 +242,24 @@ extension RouteInfoCell {
             static let vertical: CGFloat     = 6
         }
         enum Font {
-            
+            static let route = UIFont.systemFont(ofSize: 16, weight: .medium)
+            static let carrier = UIFont.systemFont(ofSize: 14, weight: .regular)
+            static let transport = UIFont.systemFont(ofSize: 14, weight: .medium)
+            static let date = UIFont.systemFont(ofSize: 14, weight: .medium)
+            static let duration = UIFont.systemFont(ofSize: 18, weight: .medium)
+            static let departureTime = UIFont.systemFont(ofSize: 18, weight: .bold)
+            static let arrivalTime = UIFont.systemFont(ofSize: 18, weight: .medium)
+            static let station = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
         enum Color {
-            
+            static let primaryText      = UIColor.black
+            static let secondaryText    = UIColor.lightGray
         }
         enum Padding {
-            static let top: CGFloat     = 8
+            static let top: CGFloat     = 12
             static let left: CGFloat    = 8
             static let right: CGFloat   = 8
-            static let bottom: CGFloat  = 8
+            static let bottom: CGFloat  = 12
         }
     }
 }
