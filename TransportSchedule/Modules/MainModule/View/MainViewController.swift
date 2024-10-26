@@ -209,6 +209,8 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        findButton.addTarget(self, action: #selector(findAction), for: .touchUpInside)
+        
         addSubviews()
         setupConstraints()
     }
@@ -217,6 +219,13 @@ final class MainViewController: UIViewController {
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
     
+}
+
+//MARK: Actions
+extension MainViewController {
+    @objc func findAction() {
+        presenter?.showScheduleScreen()
+    }
 }
 
 //MARK: Private Functions and Variables

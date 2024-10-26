@@ -7,18 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		823400482CCC470F00D33B70 /* CustomSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823400472CCC470F00D33B70 /* CustomSegmentedControl.swift */; };
+		8234004B2CCC52ED00D33B70 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8234004A2CCC52E800D33B70 /* UIImageExtension.swift */; };
+		8234004D2CCC66BF00D33B70 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8234004C2CCC66BF00D33B70 /* ScheduleViewController.swift */; };
+		8234004F2CCC66D800D33B70 /* SchedulePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8234004E2CCC66CF00D33B70 /* SchedulePresenter.swift */; };
 		823AE74B2CCA3D4D00754161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74A2CCA3D4D00754161 /* AppDelegate.swift */; };
 		823AE74D2CCA3D4D00754161 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74C2CCA3D4D00754161 /* SceneDelegate.swift */; };
 		823AE74F2CCA3D4D00754161 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823AE74E2CCA3D4D00754161 /* MainViewController.swift */; };
 		823AE7542CCA3D5000754161 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7532CCA3D5000754161 /* Assets.xcassets */; };
 		823AE7572CCA3D5000754161 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7562CCA3D5000754161 /* Base */; };
 		823AE7612CCA3E1900754161 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 823AE7602CCA3E1900754161 /* .gitignore */; };
+		823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D42CCCFEE10005DF41 /* NetworkManager.swift */; };
 		82B04A372CCA539A008CD974 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A362CCA5398008CD974 /* Router.swift */; };
 		82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A382CCA53F5008CD974 /* Assembly.swift */; };
 		82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		823400472CCC470F00D33B70 /* CustomSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSegmentedControl.swift; sourceTree = "<group>"; };
+		8234004A2CCC52E800D33B70 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
+		8234004C2CCC66BF00D33B70 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		8234004E2CCC66CF00D33B70 /* SchedulePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulePresenter.swift; sourceTree = "<group>"; };
 		823AE7472CCA3D4D00754161 /* TransportSchedule.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TransportSchedule.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		823AE74A2CCA3D4D00754161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		823AE74C2CCA3D4D00754161 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -27,6 +36,7 @@
 		823AE7562CCA3D5000754161 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		823AE7582CCA3D5000754161 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		823AE7602CCA3E1900754161 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		823B33D42CCCFEE10005DF41 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		82B04A362CCA5398008CD974 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		82B04A382CCA53F5008CD974 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -43,6 +53,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		823400492CCC52D200D33B70 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8234004A2CCC52E800D33B70 /* UIImageExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		823AE73E2CCA3D4D00754161 = {
 			isa = PBXGroup;
 			children = (
@@ -67,12 +85,22 @@
 				823AE74C2CCA3D4D00754161 /* SceneDelegate.swift */,
 				82B04A382CCA53F5008CD974 /* Assembly.swift */,
 				82B04A362CCA5398008CD974 /* Router.swift */,
+				823B33D62CCCFEEA0005DF41 /* NetworkLayer */,
 				82B04A3D2CCA6407008CD974 /* Modules */,
+				823400492CCC52D200D33B70 /* Extensions */,
 				823AE7532CCA3D5000754161 /* Assets.xcassets */,
 				823AE7552CCA3D5000754161 /* LaunchScreen.storyboard */,
 				823AE7582CCA3D5000754161 /* Info.plist */,
 			);
 			path = TransportSchedule;
+			sourceTree = "<group>";
+		};
+		823B33D62CCCFEEA0005DF41 /* NetworkLayer */ = {
+			isa = PBXGroup;
+			children = (
+				823B33D42CCCFEE10005DF41 /* NetworkManager.swift */,
+			);
+			path = NetworkLayer;
 			sourceTree = "<group>";
 		};
 		82B04A3A2CCA57C0008CD974 /* MainModule */ = {
@@ -97,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				823AE74E2CCA3D4D00754161 /* MainViewController.swift */,
+				823400472CCC470F00D33B70 /* CustomSegmentedControl.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -121,6 +150,7 @@
 		82B04A412CCA643C008CD974 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8234004C2CCC66BF00D33B70 /* ScheduleViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -128,6 +158,7 @@
 		82B04A422CCA6440008CD974 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				8234004E2CCC66CF00D33B70 /* SchedulePresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -203,10 +234,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				823400482CCC470F00D33B70 /* CustomSegmentedControl.swift in Sources */,
+				8234004B2CCC52ED00D33B70 /* UIImageExtension.swift in Sources */,
 				82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */,
+				8234004D2CCC66BF00D33B70 /* ScheduleViewController.swift in Sources */,
+				823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */,
 				823AE74F2CCA3D4D00754161 /* MainViewController.swift in Sources */,
 				82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */,
 				823AE74B2CCA3D4D00754161 /* AppDelegate.swift in Sources */,
+				8234004F2CCC66D800D33B70 /* SchedulePresenter.swift in Sources */,
 				82B04A372CCA539A008CD974 /* Router.swift in Sources */,
 				823AE74D2CCA3D4D00754161 /* SceneDelegate.swift in Sources */,
 			);
