@@ -24,9 +24,12 @@ final class MainViewController: UIViewController {
     
     let fromTextField = {
         let textField = UITextField()
-        textField.font = Constants.Font.textField
+        
+        textField.tag = 0
+        textField.returnKeyType = .next
         textField.autocorrectionType = .no
         
+        textField.font = Constants.Font.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
@@ -34,13 +37,17 @@ final class MainViewController: UIViewController {
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
         
+        
         return textField
     }()
     let whereTextField = {
         let textField = UITextField()
-        textField.font = Constants.Font.textField
+        
+        textField.tag = 1
+        textField.returnKeyType = .done
         textField.autocorrectionType = .no
         
+        textField.font = Constants.Font.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
@@ -48,13 +55,15 @@ final class MainViewController: UIViewController {
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
         
+        
         return textField
     }()
     
     let switchButton = {
         let button = UIButton()
-        let image = UIImage(systemName: "arrow.up.arrow.down")
+        let image = UIImage(named: "UpDownArrows")
         button.setImage(image, for: .normal)
+        button.contentMode = .scaleAspectFit
         
         return button
     }()
@@ -220,6 +229,9 @@ final class MainViewController: UIViewController {
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
+        fromTextField.delegate = self
+        whereTextField.delegate = self
+        
         addTargets()
         addSubviews()
         setupConstraints()
@@ -249,6 +261,23 @@ extension MainViewController: MainViewProtocol {
     }
 }
 
+//MARK: UITextFieldDelegate
+extension MainViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField,
+                   shouldChangeCharactersIn range: NSRange,
+                   replacementString string: String) -> Bool {
+        return (string == "\n" || string == " " ? false : true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField.tag == 0 {
+            whereTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+    }
+}
+
 //MARK: Actions
 extension MainViewController {
     @objc func dismissKeyboard() {
@@ -257,6 +286,16 @@ extension MainViewController {
     
     @objc func findAction() {
         presenter?.showScheduleScreen()
+    }
+    
+    @objc func switchRouteStations() {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) {
+            self.switchButton.transform = CGAffineTransform(scaleX: 0.9, y: 0.9)
+        } completion: { _ in
+            self.switchButton.transform = CGAffineTransform(scaleX: 1, y: 1)
+        }
+        
+        (fromTextField.text, whereTextField.text) = (whereTextField.text, fromTextField.text)
     }
     
     @objc func anyTravelChosen() {
@@ -343,7 +382,7 @@ extension MainViewController {
     ]}
     
     private func animateButton(_ button: UIButton) {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut) {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut) {
             button.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         } completion: { _ in
             button.transform = CGAffineTransform(scaleX: 1, y: 1)
@@ -375,6 +414,9 @@ extension MainViewController {
         findButton.addTarget(self,
                              action: #selector(findAction),
                              for: .touchUpInside)
+        switchButton.addTarget(self,
+                               action: #selector(switchRouteStations),
+                               for: .touchUpInside)
         anyButton.addTarget(self,
                             action: #selector(anyTravelChosen),
                             for: .touchUpInside)
@@ -485,7 +527,7 @@ extension MainViewController {
 //MARK: Private Local Constants
 extension MainViewController {
     private enum Constants {
-        static let switchButtonSize = CGSize(width: 25, height: 25)
+        static let switchButtonSize = CGSize(width: 22, height: 22)
         static let directionalEdgeInsets = NSDirectionalEdgeInsets(top: 15,
                                                                    leading: 15,
                                                                    bottom: 15,
