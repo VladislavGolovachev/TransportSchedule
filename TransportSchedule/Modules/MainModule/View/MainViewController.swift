@@ -165,6 +165,14 @@ final class MainViewController: UIViewController {
         
         return button
     }()
+    let activityIndicator = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        activityIndicator.color = .darkGray
+        
+        return activityIndicator
+    }()
     
     private lazy var textFieldStackView: UIStackView = {
         let separator = UIView()
@@ -254,8 +262,12 @@ final class MainViewController: UIViewController {
 
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
-    func showAlert(message: String) {
-        let alert = UIAlertController(title: "Возникла ошибка",
+    func stopActivityIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title,
                                       message: message,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Закрыть", style: .default))
@@ -490,6 +502,7 @@ extension MainViewController {
         view.addSubview(anyButton)
         view.addSubview(buttonStackView)
         view.addSubview(findButton)
+        view.addSubview(activityIndicator)
     }
     
     private func setupConstraints() {
@@ -501,6 +514,7 @@ extension MainViewController {
         anyButton.translatesAutoresizingMaskIntoConstraints             = false
         buttonStackView.translatesAutoresizingMaskIntoConstraints       = false
         findButton.translatesAutoresizingMaskIntoConstraints            = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints     = false
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
@@ -560,7 +574,11 @@ extension MainViewController {
                                                 constant: Constants.Padding.Global.left),
             findButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
                                             constant: -Constants.Padding.Global.right),
-            findButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight)
+            findButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight),
+            
+            activityIndicator.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                        constant: -Constants.Padding.Global.right),
+            activityIndicator.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
         ])
     }
 }

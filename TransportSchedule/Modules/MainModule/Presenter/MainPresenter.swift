@@ -8,8 +8,9 @@
 import Foundation
 
 protocol MainViewProtocol: AnyObject {
-    func showAlert(message: String)
+    func showAlert(title: String, message: String)
     func updateDate(with: String)
+    func stopActivityIndicator()
 }
 
 protocol MainViewPresenterProtocol: AnyObject {
@@ -51,8 +52,16 @@ final class MainPresenter: MainViewPresenterProtocol {
     func showScheduleScreen() {
         guard let fromCode = cityCodes[departureCity],
               let toCode = cityCodes[arrivalCity] else {
-            DispatchQueue.main.async {
-                self.view?.showAlert(message: InputError.missingCities.rawValue)
+            if cityCodes.isEmpty {
+                DispatchQueue.main.async {
+                    self.view?.showAlert(title: Constants.DataNotLoaded.title,
+                                         message: Constants.DataNotLoaded.message)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.view?.showAlert(title: Constants.errorCausedTitle,
+                                         message: InputError.missingCities.rawValue)
+                }
             }
             return
         }
@@ -104,7 +113,8 @@ final class MainPresenter: MainViewPresenterProtocol {
                 
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.view?.showAlert(message: error.rawValue)
+                    self?.view?.showAlert(title: Constants.errorCausedTitle,
+                                          message: error.rawValue)
                 }
                 return
             }
@@ -116,12 +126,12 @@ final class MainPresenter: MainViewPresenterProtocol {
 extension MainPresenter {
     private func pickOfRussiaCities(from countries: [Country]) {
         for country in countries {
-            if country.title != "Россия" {
+            if country.title != Constants.countryLookingFor {
                 continue
             }
             for region in country.regions {
                 for city in region.settlements {
-                    if var code = city.codes["yandex_code"],
+                    if let code = city.codes[Constants.usedAPICode],
                        !city.title.isEmpty && !code.isEmpty {
                         if code.first != "c" {
                             continue
@@ -131,8 +141,21 @@ extension MainPresenter {
                 }
             }
         }
-        for (city, code) in cityCodes {
-            print(city, code)
+        DispatchQueue.main.async {
+            self.view?.stopActivityIndicator()
+        }
+    }
+}
+
+//MARK: Private Local Constants
+extension MainPresenter {
+    private enum Constants {
+        static let countryLookingFor = "Россия"
+        static let usedAPICode = "yandex_code"
+        static let errorCausedTitle = "Возникла ошибка"
+        enum DataNotLoaded {
+            static let title = "Предупреждение"
+            static let message = "Данные необходимые для работы еще не загружены. Дождитесь, пока индикатор в верхнем углу экрана пропадет"
         }
     }
 }

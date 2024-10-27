@@ -51,7 +51,7 @@ final class SchedulePresenter: ScheduleViewPresenterProtocol {
                 self?.formatScheduleData(from: schedule)
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.view?.showAlert(title: "Возникла ошибка",
+                    self?.view?.showAlert(title: Constants.errorCausedTitle,
                                           message: error.rawValue)
                 }
             }
@@ -93,8 +93,8 @@ extension SchedulePresenter {
         DispatchQueue.main.async {
             self.view?.stopActivityIndicator()
             if ridesInfo.isEmpty {
-                self.view?.showAlert(title: "Внимание!",
-                                     message: "Таких маршрутов нет")
+                self.view?.showAlert(title: Constants.NoRoutes.title,
+                                     message: Constants.NoRoutes.message)
             } else {
                 self.view?.refreshSchedule(with: ridesInfo)
             }
@@ -131,5 +131,16 @@ extension SchedulePresenter {
         let hours = Int(doubleHours)
         
         return Double(hours) / 10.0
+    }
+}
+
+//MARK: Private Local Constants
+extension SchedulePresenter {
+    private enum Constants {
+        static let errorCausedTitle = "Возникла ошибка"
+        enum NoRoutes {
+            static let title = "Внимание!"
+            static let message = "Таких маршрутов нет"
+        }
     }
 }
