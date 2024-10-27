@@ -9,6 +9,8 @@ import UIKit
 
 final class ScheduleViewController: UIViewController {
     var presenter: ScheduleViewPresenterProtocol?
+    var currentRides: [RideInfo]?
+    
     lazy var tableView = {
         let tableView = UITableView()
         
@@ -25,6 +27,7 @@ final class ScheduleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter?.showSchedule()
         
         view.backgroundColor = .white
         view.addSubview(tableView)
@@ -36,6 +39,11 @@ final class ScheduleViewController: UIViewController {
 
 //MARK: ScheduleViewProtocol
 extension ScheduleViewController: ScheduleViewProtocol {
+    func refreshSchedule(with rides: [RideInfo]) {
+        currentRides = rides
+        tableView.reloadData()
+    }
+    
     func showAlert(message: String) {
         let alert = UIAlertController(title: "Возникла ошибка",
                                       message: message,
@@ -48,11 +56,26 @@ extension ScheduleViewController: ScheduleViewProtocol {
 //MARK: UITableViewDataSource
 extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        guard let count = currentRides?.count else {
+            return 0
+        }
+        return count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteInfoCell", for: indexPath)
+        as? RouteInfoCell ?? RouteInfoCell()
+        
+        guard let ride = currentRides?[indexPath.row] else {
+            return cell
+        }
+        cell.setRoute(ride.route)
+        cell.setCarrierCompany(ride.carrier.company)
+        cell.setVehicle(ride.carrier.vehicle)
+        cell.setDeparture(ride.departure)
+        cell.setArrival(ride.arrival)
+        cell.setDuration(ride.duration)
+        cell.setTransportImage(for: ride.transport)
         
         return cell
     }

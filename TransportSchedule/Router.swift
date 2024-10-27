@@ -28,7 +28,7 @@ final class Router: RouterProtocol {
         return vc
     }
     
-    func goToScheduleScreen(with: RouteInfo) {
+    func goToScheduleScreen(with routeInfo: RouteInfo) {
         let vc = assembly.createScheduleModule(router: self, routeInfo: routeInfo)
         let navVC = UINavigationController(rootViewController: vc)
         

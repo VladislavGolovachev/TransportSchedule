@@ -57,10 +57,10 @@ final class MainPresenter: MainViewPresenterProtocol {
             return
         }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-dd-MM"
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: date)
         
-        var routeInfo = RouteInfo(codeCityFrom: fromCode,
+        let routeInfo = RouteInfo(codeCityFrom: fromCode,
                                   codeCityTo: toCode,
                                   date: dateString,
                                   transport: transport)
@@ -123,7 +123,7 @@ extension MainPresenter {
                 for city in region.settlements {
                     if var code = city.codes["yandex_code"],
                        !city.title.isEmpty && !code.isEmpty {
-                        if code.removeFirst() != "c" {
+                        if code.first != "c" {
                             continue
                         }
                         cityCodes[city.title] = code

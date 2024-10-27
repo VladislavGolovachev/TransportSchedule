@@ -10,13 +10,13 @@ import UIKit
 class RouteInfoCell: UITableViewCell {
     static let reuseIdentifier = "RouteInfoCell"
     
-    let transportImageView = {
-        let image = UIImage(systemName: "bell")
-        let imageView = UIImageView(image: image)
+    private let transportImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         
         return imageView
     }()
-    let routeLabel = {
+    private let routeLabel = {
         let label = UILabel()
         
         label.text = "Город отправления - город прибытия"
@@ -28,7 +28,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let carrierLabel = {
+    private let carrierLabel = {
         let label = UILabel()
         
         label.text = "Компания перевозки"
@@ -40,7 +40,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let transportLabel = {
+    private let transportLabel = {
         let label = UILabel()
         
         label.text = "Транспорт"
@@ -52,7 +52,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let departureDateLabel = {
+    private let departureDateLabel = {
         let label = UILabel()
         
         label.text = "1 янв."
@@ -61,7 +61,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let departureTimeLabel = {
+    private let departureTimeLabel = {
         let label = UILabel()
         
         label.text = "00:00"
@@ -70,7 +70,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let arrivalDateLabel = {
+    private let arrivalDateLabel = {
         let label = UILabel()
         
         label.text = "1 янв."
@@ -79,7 +79,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let arrivalTimeLabel = {
+    private let arrivalTimeLabel = {
         let label = UILabel()
         
         label.text = "00:00"
@@ -88,7 +88,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let durationLabel = {
+    private let durationLabel = {
         let label = UILabel()
         
         label.text = "0 часов"
@@ -97,7 +97,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let departureStationLabel = {
+    private let departureStationLabel = {
         let label = UILabel()
         
         label.text = "Пункт отбытия"
@@ -109,7 +109,7 @@ class RouteInfoCell: UITableViewCell {
         
         return label
     }()
-    let arrivalStationLabel = {
+    private let arrivalStationLabel = {
         let label = UILabel()
         
         label.text = "Пункт прибытия"
@@ -162,6 +162,57 @@ class RouteInfoCell: UITableViewCell {
     }
 }
 
+//MARK: Public Functions
+extension RouteInfoCell {
+    func setRoute(_ route: String) {
+        routeLabel.text = route
+    }
+    
+    func setCarrierCompany(_ company: String) {
+        carrierLabel.text = company
+    }
+    
+    func setVehicle(_ vehicle: String) {
+        transportLabel.text = vehicle
+    }
+    
+    func setDeparture(_ departure: DepartureInfo) {
+        departureDateLabel.text = departure.date
+        departureTimeLabel.text = departure.time
+        departureStationLabel.text = departure.station
+    }
+    
+    func setArrival(_ arrival: ArrivalInfo) {
+        arrivalDateLabel.text = arrival.date
+        arrivalTimeLabel.text = arrival.time
+        arrivalStationLabel.text = arrival.station
+    }
+    
+    func setDuration(_ duration: String) {
+        durationLabel.text = duration
+    }
+    
+    func setTransportImage(for transport: Transport) {
+        switch transport {
+        case .plane:
+            transportImageView.image = UIImage(named: "YellowPlane")
+            
+            
+        case .train:
+            transportImageView.image = UIImage(named: "YellowTrain")
+            
+        case .suburban:
+            transportImageView.image = UIImage(named: "YellowSuburban")
+            
+        case .bus:
+            transportImageView.image = UIImage(named: "YellowBus")
+            
+        default:
+            break
+        }
+    }
+}
+
 //MARK: Private Functions
 extension RouteInfoCell {
     private func addSubviews() {
@@ -205,10 +256,11 @@ extension RouteInfoCell {
             arrivalDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor,
                                                   constant: Constants.Padding.top),
             
+            timeStackView.topAnchor.constraint(equalTo: arrivalDateLabel.bottomAnchor,
+                   constant: Constants.Spacing.vertical),
             timeStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor,
                                                     constant: -Constants.Padding.right),
-            timeStackView.topAnchor.constraint(equalTo: arrivalDateLabel.bottomAnchor,
-                                               constant: Constants.Spacing.vertical),
+            timeStackView.widthAnchor.constraint(equalToConstant: Constants.timeStackViewWidth),
             
             departureDateLabel.topAnchor.constraint(equalTo: contentView.topAnchor,
                                                     constant: Constants.Padding.top),
@@ -235,8 +287,10 @@ extension RouteInfoCell {
 extension RouteInfoCell {
     private enum Constants {
         static let transportImageSize = CGSize(width: 20, height: 20)
-        static let routeStackViewWidth: CGFloat     = 130
+        static let routeStackViewWidth: CGFloat     = 110
         static let stationLabelWidth: CGFloat = 100
+        static let timeStackViewWidth: CGFloat = 200
+        
         enum Spacing {
             static let horizontal: CGFloat   = 15
             static let vertical: CGFloat     = 6
@@ -257,8 +311,8 @@ extension RouteInfoCell {
         }
         enum Padding {
             static let top: CGFloat     = 12
-            static let left: CGFloat    = 8
-            static let right: CGFloat   = 8
+            static let left: CGFloat    = 10
+            static let right: CGFloat   = 10
             static let bottom: CGFloat  = 12
         }
     }

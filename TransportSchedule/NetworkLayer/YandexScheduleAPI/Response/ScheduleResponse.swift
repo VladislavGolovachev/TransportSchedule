@@ -7,6 +7,12 @@
 
 struct ScheduleResponse: Decodable {
     let segments: [ScheduleSegment]
+    let searchInfo: SearchInfo
+    
+    private enum CodingKeys: String, CodingKey {
+        case segments = "segments"
+        case searchInfo = "search"
+    }
 }
 
 struct ScheduleSegment: Decodable {
@@ -19,7 +25,6 @@ struct ScheduleSegment: Decodable {
     
     let duration: Int
     
-    let searchInfo: SearchInfo
     
     private enum CodingKeys: String, CodingKey {
         case departure      = "departure"
@@ -28,7 +33,6 @@ struct ScheduleSegment: Decodable {
         case stationTo      = "to"
         case thread         = "thread"
         case duration       = "duration"
-        case searchInfo     = "search"
     }
 }
 
@@ -39,7 +43,7 @@ struct StationInfo: Decodable {
 struct ThreadInfo: Decodable {
     let carrier: Carrier
     let transportType: String
-    let vehicle: String
+    let vehicle: String?
     
     private enum CodingKeys: String, CodingKey {
         case carrier        = "carrier"
