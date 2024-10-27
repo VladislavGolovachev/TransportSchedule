@@ -36,7 +36,13 @@ final class ScheduleViewController: UIViewController {
 
 //MARK: ScheduleViewProtocol
 extension ScheduleViewController: ScheduleViewProtocol {
-    
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Возникла ошибка",
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .default))
+        self.present(alert, animated: true)
+    }
 }
 
 //MARK: UITableViewDataSource
@@ -52,6 +58,7 @@ extension ScheduleViewController: UITableViewDataSource {
     }
 }
 
+//MARK: UITableViewDelegate
 extension ScheduleViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension

@@ -11,4 +11,21 @@ enum Transport: String {
     case train      = "train"
     case suburban   = "suburban"
     case bus        = "bus"
+    
+    init(rawValue: String) {
+        switch rawValue {
+        case Transport.any.rawValue:
+            self = .any
+        case Transport.plane.rawValue:
+            self = .plane
+        case Transport.train.rawValue:
+            self = .train
+        case Transport.suburban.rawValue:
+            self = .suburban
+        case Transport.bus.rawValue:
+            self = .bus
+        default:
+            self = .any
+        }
+    }
 }

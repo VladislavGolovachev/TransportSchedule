@@ -49,17 +49,22 @@ final class MainPresenter: MainViewPresenterProtocol {
     }
     
     func showScheduleScreen() {
-        router.goToScheduleScreen()
-        
+        guard let fromCode = cityCodes[departureCity],
+              let toCode = cityCodes[arrivalCity] else {
+            DispatchQueue.main.async {
+                self.view?.showAlert(message: InputError.missingCities.rawValue)
+            }
+            return
+        }
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yy"
+        dateFormatter.dateFormat = "yyyy-dd-MM"
         let dateString = dateFormatter.string(from: date)
         
-        print("Departure: ", departureCity)
-        print("Arrival: ", arrivalCity)
-        print("Date: ", dateString)
-        print("Transport: ", transport.rawValue)
-        print()
+        var routeInfo = RouteInfo(codeCityFrom: fromCode,
+                                  codeCityTo: toCode,
+                                  date: dateString,
+                                  transport: transport)
+        router.goToScheduleScreen(with: routeInfo)
     }
     
     func formatDate(_ date: Date) {
@@ -118,8 +123,10 @@ extension MainPresenter {
                 for city in region.settlements {
                     if var code = city.codes["yandex_code"],
                        !city.title.isEmpty && !code.isEmpty {
-                            code.removeFirst()
-                            cityCodes[city.title] = code
+                        if code.removeFirst() != "c" {
+                            continue
+                        }
+                        cityCodes[city.title] = code
                     }
                 }
             }
