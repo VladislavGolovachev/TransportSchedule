@@ -236,7 +236,7 @@ final class MainViewController: UIViewController {
         let barButton = UIBarButtonItem(title: "Сохранить",
                                         style: .done,
                                         target: self,
-                                        action: #selector(saveDate(_:)))
+                                        action: #selector(saveDate))
         toolBar.setItems([flexibleSpace, barButton], animated: false)
         activatingKeyboardTextField.inputAccessoryView = toolBar
     }
@@ -244,7 +244,9 @@ final class MainViewController: UIViewController {
 
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
-    
+    func updateDate(with dateString: String) {
+        dateSegmentedControl.setTitle(dateString, forSegmentAt: 2)
+    }
 }
 
 //MARK: Actions
@@ -314,11 +316,18 @@ extension MainViewController {
             activatingKeyboardTextField.becomeFirstResponder()
         } else {
             activatingKeyboardTextField.resignFirstResponder()
+            segmentedControl.setTitle("Дата", forSegmentAt: 2)
         }
     }
     
-    @objc func saveDate(_ d: UIDatePicker) {
+    @objc func saveDate() {
+        guard let datePicker = activatingKeyboardTextField.inputView as? UIDatePicker else {
+            return
+        }
+        let date = datePicker.date
+        presenter?.formatDate(date)
         
+        view.endEditing(true)
     }
 }
 

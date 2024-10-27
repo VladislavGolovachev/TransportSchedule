@@ -8,7 +8,7 @@
 import Foundation
 
 protocol MainViewProtocol: AnyObject {
-    
+    func updateDate(with: String)
 }
 
 protocol MainViewPresenterProtocol: AnyObject {
@@ -17,6 +17,7 @@ protocol MainViewPresenterProtocol: AnyObject {
          networkManager: NetworkManagerProtocol)
     
     func showScheduleScreen()
+    func formatDate(_ date: Date)
 }
 
 final class MainPresenter: MainViewPresenterProtocol {
@@ -34,5 +35,14 @@ final class MainPresenter: MainViewPresenterProtocol {
     
     func showScheduleScreen() {
         router.goToScheduleScreen()
+    }
+    
+    func formatDate(_ date: Date) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yy"
+        
+        let dateString = dateFormatter.string(from: date)
+        
+        view?.updateDate(with: dateString)
     }
 }
