@@ -8,7 +8,8 @@
 import Foundation
 
 protocol ScheduleViewProtocol: AnyObject {
-    func showAlert(message: String)
+    func showAlert(title: String, message: String)
+    func stopActivityIndicator()
     func refreshSchedule(with: [RideInfo])
 }
 
@@ -50,7 +51,8 @@ final class SchedulePresenter: ScheduleViewPresenterProtocol {
                 self?.formatScheduleData(from: schedule)
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self?.view?.showAlert(message: error.rawValue)
+                    self?.view?.showAlert(title: "Возникла ошибка",
+                                          message: error.rawValue)
                 }
             }
         }
@@ -88,12 +90,14 @@ extension SchedulePresenter {
             ridesInfo.append(rideInfo)
         }
         
-        for ride in ridesInfo {
-            print(ride.route)
-        }
-        
         DispatchQueue.main.async {
-            self.view?.refreshSchedule(with: ridesInfo)
+            self.view?.stopActivityIndicator()
+            if ridesInfo.isEmpty {
+                self.view?.showAlert(title: "Внимание!",
+                                     message: "Таких маршрутов нет")
+            } else {
+                self.view?.refreshSchedule(with: ridesInfo)
+            }
         }
     }
     
@@ -108,11 +112,17 @@ extension SchedulePresenter {
         
         let dateFormatterTo = DateFormatter()
         let timeFormatterTo = DateFormatter()
-        dateFormatterTo.dateFormat = "dd MM"
+        dateFormatterTo.dateStyle = .medium
         timeFormatterTo.dateFormat = "hh:mm"
         
         let time = timeFormatterTo.string(from: dateToFormat)
-        let date = dateFormatterTo.string(from: dateToFormat)
+        var date = dateFormatterTo.string(from: dateToFormat)
+        
+        let end = date.endIndex
+        let range = date.index(end, offsetBy: -5)..<end
+        date.removeSubrange(range)
+        date += "."
+        
         
         return (time, date)
     }

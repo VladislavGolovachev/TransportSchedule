@@ -24,6 +24,14 @@ final class ScheduleViewController: UIViewController {
         
         return tableView
     }()
+    let activityIndicator = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        activityIndicator.color = .darkGray
+        
+        return activityIndicator
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +39,7 @@ final class ScheduleViewController: UIViewController {
         
         view.backgroundColor = .white
         view.addSubview(tableView)
+        view.addSubview(activityIndicator)
         
         setupContraints()
         customizeNavBar()
@@ -39,16 +48,24 @@ final class ScheduleViewController: UIViewController {
 
 //MARK: ScheduleViewProtocol
 extension ScheduleViewController: ScheduleViewProtocol {
+    func stopActivityIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
     func refreshSchedule(with rides: [RideInfo]) {
         currentRides = rides
         tableView.reloadData()
     }
     
-    func showAlert(message: String) {
-        let alert = UIAlertController(title: "Возникла ошибка",
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title,
                                       message: message,
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Закрыть", style: .default))
+        let action = UIAlertAction(title: "Закрыть", style: .cancel) { [weak self] _ in
+            self?.presenter?.showMainScreen()
+        }
+        alert.addAction(action)
+        
         self.present(alert, animated: true)
     }
 }
@@ -99,13 +116,17 @@ extension ScheduleViewController {
 extension ScheduleViewController {
     private func setupContraints() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
     
