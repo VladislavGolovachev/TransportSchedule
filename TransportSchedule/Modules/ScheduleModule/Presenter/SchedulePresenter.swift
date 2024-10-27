@@ -119,10 +119,8 @@ extension SchedulePresenter {
         var date = dateFormatterTo.string(from: dateToFormat)
         
         let end = date.endIndex
-        let range = date.index(end, offsetBy: -5)..<end
+        let range = date.index(end, offsetBy: -8)..<end
         date.removeSubrange(range)
-        date += "."
-        
         
         return (time, date)
     }
