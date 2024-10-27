@@ -284,7 +284,29 @@ extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
-        return (string == "\n" || string == " " ? false : true)
+        if string == "" {
+            return true
+        }
+        if string == "\n" {
+            return false
+        }
+        
+        if let text = textField.text {
+            if text.isEmpty {
+                if string == " " {
+                    return false
+                }
+                return true
+            }
+            
+            let index = range.location
+            let stringIndex = text.index(text.startIndex, offsetBy: index - 1)
+            if !text.isEmpty && string == " " && text[stringIndex] == " " {
+                return false
+            }
+        }
+        
+        return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
