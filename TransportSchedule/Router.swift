@@ -9,6 +9,8 @@ import UIKit
 
 protocol RouterProtocol {
     func initiateRootViewController() -> UIViewController
+    func goToScheduleScreen()
+    func returnToMainScreen()
 }
 
 final class Router: RouterProtocol {
@@ -21,6 +23,22 @@ final class Router: RouterProtocol {
     
     func initiateRootViewController() -> UIViewController {
         let vc = assembly.createMainModule(router: self)
+        rootViewController = vc
+        
         return vc
+    }
+    
+    func goToScheduleScreen() {
+        let vc = assembly.createScheduleModule(router: self)
+        let navVC = UINavigationController(rootViewController: vc)
+        
+        navVC.modalPresentationStyle = .fullScreen
+        navVC.modalTransitionStyle = .coverVertical
+        rootViewController?.present(navVC, animated: true)
+    }
+    
+    func returnToMainScreen() {
+        rootViewController?.presentedViewController?.modalTransitionStyle = .coverVertical
+        rootViewController?.dismiss(animated: true)
     }
 }
