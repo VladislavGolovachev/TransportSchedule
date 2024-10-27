@@ -14,7 +14,7 @@ final class ScheduleViewController: UIViewController {
     lazy var tableView = {
         let tableView = UITableView()
         
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = Constants.backgroundColor
         tableView.allowsSelection = false
         
         tableView.separatorStyle = .none
@@ -37,7 +37,7 @@ final class ScheduleViewController: UIViewController {
         super.viewDidLoad()
         presenter?.showSchedule()
         
-        view.backgroundColor = .white
+        view.backgroundColor = Constants.backgroundColor
         view.addSubview(tableView)
         view.addSubview(activityIndicator)
         
@@ -82,6 +82,7 @@ extension ScheduleViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "RouteInfoCell", for: indexPath)
         as? RouteInfoCell ?? RouteInfoCell()
+        cell.backgroundColor = Constants.backgroundColor
         
         guard let ride = currentRides?[indexPath.row] else {
             return cell
@@ -131,6 +132,11 @@ extension ScheduleViewController {
     }
     
     private func customizeNavBar() {
+        navigationController?.navigationBar.barTintColor = Constants.backgroundColor
+        navigationController?.navigationBar.titleTextAttributes = [
+            .foregroundColor: Constants.textColor
+        ]
+        
         let backButton = UIButton(type: .system)
         
         backButton.addTarget(self, action: #selector(backAction), for: .touchUpInside)
@@ -148,5 +154,8 @@ extension ScheduleViewController {
 extension ScheduleViewController {
     private enum Constants {
         static let navBarTitle = "Расписание"
+        
+        static let backgroundColor = UIColor.white
+        static let textColor = UIColor.black
     }
 }

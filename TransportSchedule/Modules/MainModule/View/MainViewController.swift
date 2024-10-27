@@ -30,13 +30,13 @@ final class MainViewController: UIViewController {
         textField.autocorrectionType = .no
         
         textField.font = Constants.Font.textField
+        textField.textColor = Constants.Color.Text.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
         let attributedString = NSAttributedString(string: "Откуда",
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
-        
         
         return textField
     }()
@@ -48,13 +48,13 @@ final class MainViewController: UIViewController {
         textField.autocorrectionType = .no
         
         textField.font = Constants.Font.textField
+        textField.textColor = Constants.Color.Text.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
         let attributedString = NSAttributedString(string: "Куда",
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
-        
         
         return textField
     }()
@@ -70,9 +70,6 @@ final class MainViewController: UIViewController {
     
     lazy var dateSegmentedControl: UISegmentedControl = {
         let segmentedControl = CustomSegmentedControl(cornerRadius: Constants.cornerRadius)
-        
-        //Cos Apple's UISegmentedControl makes color darker
-        segmentedControl.backgroundColor = Constants.Color.interface.withAlphaComponent(0.4)
         segmentedControl.setSelectedSegmentColor(Constants.Color.selectedItem)
         
         segmentedControl.insertSegment(withTitle: "Сегодня",at: 0, animated: false)
@@ -223,7 +220,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         presenter?.downloadCityCodes()
         
-        view.backgroundColor = .white
+        view.backgroundColor = Constants.Color.background
         
         let tapGesture = UITapGestureRecognizer(target: self,
                                          action: #selector(dismissKeyboard))
@@ -597,11 +594,13 @@ extension MainViewController {
                                               alpha: 1)
             static let selectedItem = UIColor.darkGray
             static let placeholder  = UIColor.lightGray
+            static let background   = UIColor.white
             
             enum Text {
                 static let title        = UIColor.black
                 static let selected     = UIColor.white
                 static let notSelected  = UIColor.black
+                static let textField    = UIColor.black
             }
         }
         
