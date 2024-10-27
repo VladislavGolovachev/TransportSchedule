@@ -21,7 +21,6 @@ final class MainViewController: UIViewController {
         
         return label
     }()
-    
     let fromTextField = {
         let textField = UITextField()
         
@@ -58,7 +57,6 @@ final class MainViewController: UIViewController {
         
         return textField
     }()
-    
     let switchButton = {
         let button = UIButton()
         let image = UIImage(named: "UpDownArrows")
@@ -67,14 +65,13 @@ final class MainViewController: UIViewController {
         
         return button
     }()
-    
     lazy var dateSegmentedControl: UISegmentedControl = {
         let segmentedControl = CustomSegmentedControl(cornerRadius: Constants.cornerRadius)
         segmentedControl.setSelectedSegmentColor(Constants.Color.selectedItem)
         
-        segmentedControl.insertSegment(withTitle: "Сегодня",at: 0, animated: false)
-        segmentedControl.insertSegment(withTitle: "Завтра", at: 1, animated: false)
-        segmentedControl.insertSegment(withTitle: "Дата", at: 2, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.today, at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.tomorrow, at: 1, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.date, at: 2, animated: false)
         segmentedControl.selectedSegmentIndex = 0
         
         segmentedControl.setTitleTextAttributes(notSelectedTextAttributes, for: .normal)
@@ -82,7 +79,6 @@ final class MainViewController: UIViewController {
         
         return segmentedControl
     }()
-    
     lazy var anyButton = {
         let button = UIButton()
         button.backgroundColor = Constants.Color.selectedItem
@@ -93,7 +89,7 @@ final class MainViewController: UIViewController {
         button.configuration = config
         
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: selectedTextAttributes)
         button.setAttributedTitle(attrString,
                                   for: .normal)
@@ -140,7 +136,6 @@ final class MainViewController: UIViewController {
         
         return button
     }()
-    
     lazy var findButton = {
         let button = UIButton()
         button.backgroundColor = Constants.Color.findButton
@@ -300,6 +295,14 @@ extension MainViewController: UITextFieldDelegate {
             }
             
             let index = range.location
+            if index == 0 {
+                if string == " " {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            
             let stringIndex = text.index(text.startIndex, offsetBy: index - 1)
             if !text.isEmpty && string == " " && text[stringIndex] == " " {
                 return false
@@ -355,7 +358,7 @@ extension MainViewController {
         
         anyButton.backgroundColor = Constants.Color.selectedItem
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: selectedTextAttributes)
         anyButton.setAttributedTitle(attrString, for: .normal)
         
@@ -423,7 +426,7 @@ extension MainViewController {
         }
         
         activatingKeyboardTextField.resignFirstResponder()
-        segmentedControl.setTitle("Дата", forSegmentAt: 2)
+        segmentedControl.setTitle(Constants.Text.date, forSegmentAt: 2)
         
         guard let datePicker =
         activatingKeyboardTextField.inputView as? UIDatePicker else {
@@ -467,7 +470,7 @@ extension MainViewController {
     private func unselectButtons() {
         anyButton.backgroundColor = Constants.Color.interface
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: notSelectedTextAttributes)
         anyButton.setAttributedTitle(attrString, for: .normal)
         
@@ -622,7 +625,6 @@ extension MainViewController {
             static let textField    = UIFont.systemFont(ofSize: 16, weight: .semibold)
             static let common       = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
-        
         enum Color {
             static let interface    = UIColor(red: (235.0 / 255.0),
                                               green: (235.0 / 255.0),
@@ -643,13 +645,11 @@ extension MainViewController {
                 static let textField    = UIColor.black
             }
         }
-        
         enum Spacing {
             static let routeMenu: CGFloat    = 10
             static let global: CGFloat       = 15
             static let buttonStack: CGFloat  = 10
         }
-        
         enum Padding {
             enum Global {
                 static let top: CGFloat     = 10
@@ -663,6 +663,12 @@ extension MainViewController {
                 static let right: CGFloat   = 14
                 static let bottom: CGFloat  = 14
             }
+        }
+        enum Text {
+            static let any      = "любой"
+            static let date     = "Дата"
+            static let tomorrow = "Завтра"
+            static let today    = "Сегодня"
         }
     }
 }

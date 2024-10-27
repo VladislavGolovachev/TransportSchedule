@@ -19,7 +19,6 @@ class RouteInfoCell: UITableViewCell {
     private let routeLabel = {
         let label = UILabel()
         
-        label.text = "Город отправления - город прибытия"
         label.font = Constants.Font.route
         label.textColor = Constants.Color.primaryText
         
@@ -31,7 +30,6 @@ class RouteInfoCell: UITableViewCell {
     private let carrierLabel = {
         let label = UILabel()
         
-        label.text = "Компания перевозки"
         label.font = Constants.Font.carrier
         label.textColor = Constants.Color.primaryText
         
@@ -43,7 +41,6 @@ class RouteInfoCell: UITableViewCell {
     private let transportLabel = {
         let label = UILabel()
         
-        label.text = "Транспорт"
         label.font = Constants.Font.transport
         label.textColor = Constants.Color.secondaryText
         
@@ -55,7 +52,6 @@ class RouteInfoCell: UITableViewCell {
     private let departureDateLabel = {
         let label = UILabel()
         
-        label.text = "1 янв."
         label.font = Constants.Font.date
         label.textColor = Constants.Color.secondaryText
         
@@ -64,7 +60,6 @@ class RouteInfoCell: UITableViewCell {
     private let departureTimeLabel = {
         let label = UILabel()
         
-        label.text = "00:00"
         label.font = Constants.Font.departureTime
         label.textColor = Constants.Color.primaryText
         
@@ -73,7 +68,6 @@ class RouteInfoCell: UITableViewCell {
     private let arrivalDateLabel = {
         let label = UILabel()
         
-        label.text = "1 янв."
         label.font = Constants.Font.date
         label.textColor = Constants.Color.secondaryText
         
@@ -82,7 +76,6 @@ class RouteInfoCell: UITableViewCell {
     private let arrivalTimeLabel = {
         let label = UILabel()
         
-        label.text = "00:00"
         label.font = Constants.Font.arrivalTime
         label.textColor = Constants.Color.primaryText
         
@@ -91,7 +84,6 @@ class RouteInfoCell: UITableViewCell {
     private let durationLabel = {
         let label = UILabel()
         
-        label.text = "0 часов"
         label.font = Constants.Font.duration
         label.textColor = Constants.Color.secondaryText
         
@@ -100,7 +92,6 @@ class RouteInfoCell: UITableViewCell {
     private let departureStationLabel = {
         let label = UILabel()
         
-        label.text = "Пункт отбытия"
         label.font = Constants.Font.station
         label.textColor = Constants.Color.primaryText
         
@@ -112,7 +103,6 @@ class RouteInfoCell: UITableViewCell {
     private let arrivalStationLabel = {
         let label = UILabel()
         
-        label.text = "Пункт прибытия"
         label.font = Constants.Font.station
         label.textColor = Constants.Color.primaryText
         

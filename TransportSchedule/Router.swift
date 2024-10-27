@@ -30,10 +30,11 @@ final class Router: RouterProtocol {
     
     func goToScheduleScreen(with routeInfo: RouteInfo) {
         let vc = assembly.createScheduleModule(router: self, routeInfo: routeInfo)
-        let navVC = UINavigationController(rootViewController: vc)
         
+        let navVC = UINavigationController(rootViewController: vc)
         navVC.modalPresentationStyle = .fullScreen
         navVC.modalTransitionStyle = .coverVertical
+        
         rootViewController?.present(navVC, animated: true)
     }
     

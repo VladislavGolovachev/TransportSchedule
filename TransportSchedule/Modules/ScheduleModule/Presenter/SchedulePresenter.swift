@@ -49,6 +49,7 @@ final class SchedulePresenter: ScheduleViewPresenterProtocol {
             switch result {
             case .success(let schedule):
                 self?.formatScheduleData(from: schedule)
+                
             case .failure(let error):
                 DispatchQueue.main.async {
                     self?.view?.showAlert(title: Constants.errorCausedTitle,

@@ -8,11 +8,9 @@
 struct RideInfo {
     let transport: Transport
     let route: String
-    
     let carrier: CarrierInfo
     let departure: DepartureInfo
     let arrival: ArrivalInfo
-    
     let duration: String
 }
 

@@ -20,7 +20,8 @@ final class ScheduleViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(RouteInfoCell.self, forCellReuseIdentifier: "RouteInfoCell")
+        tableView.register(RouteInfoCell.self,
+                           forCellReuseIdentifier: RouteInfoCell.reuseIdentifier)
         
         return tableView
     }()
@@ -80,7 +81,7 @@ extension ScheduleViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RouteInfoCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: RouteInfoCell.reuseIdentifier, for: indexPath)
         as? RouteInfoCell ?? RouteInfoCell()
         cell.backgroundColor = Constants.backgroundColor
         

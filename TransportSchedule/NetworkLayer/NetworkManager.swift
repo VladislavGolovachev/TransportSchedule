@@ -62,7 +62,6 @@ final class NetworkManager: NetworkManagerProtocol {
                                                            from: data)
                 completion(.success(apiResponse))
             } catch {
-                print((error as NSError).description)
                 completion(.failure(.unableToDecode))
             }
         }

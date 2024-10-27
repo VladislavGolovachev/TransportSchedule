@@ -18,13 +18,10 @@ struct ScheduleResponse: Decodable {
 struct ScheduleSegment: Decodable {
     let departure: String
     let arrival: String
-    
     let stationFrom: StationInfo
     let stationTo: StationInfo
     let thread: ThreadInfo
-    
     let duration: Int
-    
     
     private enum CodingKeys: String, CodingKey {
         case departure      = "departure"
