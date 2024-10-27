@@ -8,7 +8,7 @@
 import Foundation
 
 struct CityCodesResponse: Decodable {
-    let countires: [Country]
+    let countries: [Country]
 }
 
 struct Country: Decodable {
@@ -22,13 +22,5 @@ struct Region: Decodable {
 
 struct Settlement: Decodable {
     let title: String
-    let codes: [Code]
-}
-
-struct Code: Decodable {
-    let code: String
-    
-    private enum CodingKeys: String, CodingKey {
-        case code = "yandex_code"
-    }
+    let codes: [String: String]
 }

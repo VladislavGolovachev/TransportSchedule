@@ -41,10 +41,21 @@ extension YandexScheduleAPIEndPoint: EndPointType {
                                       value: routeInfo.codeCityTo)
             let dateItem = URLQueryItem(name: "date",
                                         value: routeInfo.date)
-            let transportItem = URLQueryItem(name: "transport_types",
-                                         value: routeInfo.transport.rawValue)
+            var queryItems = [
+                apiItem,
+                fromItem,
+                toItem,
+                dateItem
+            ]
             
-            return [apiItem, fromItem, toItem, dateItem, transportItem]
+            if routeInfo.transport == .any {
+                return queryItems
+            }
+            let transportItem = URLQueryItem(name: "transport_types",
+                                             value: routeInfo.transport.rawValue)
+            queryItems.append(transportItem)
+            
+            return queryItems
         }
     }
     var httpMethod: HTTPMethod {

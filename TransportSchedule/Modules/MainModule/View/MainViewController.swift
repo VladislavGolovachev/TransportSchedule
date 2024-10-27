@@ -221,6 +221,7 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter?.downloadCityCodes()
         
         view.backgroundColor = .white
         
@@ -256,6 +257,14 @@ final class MainViewController: UIViewController {
 
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
+    func showAlert(message: String) {
+        let alert = UIAlertController(title: "Возникла ошибка",
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .default))
+        self.present(alert, animated: true)
+    }
+    
     func updateDate(with dateString: String) {
         dateSegmentedControl.setTitle(dateString, forSegmentAt: 2)
     }
@@ -274,6 +283,14 @@ extension MainViewController: UITextFieldDelegate {
             whereTextField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.tag == 0 {
+            presenter?.saveDepartureCity(textField.text)
+        } else {
+            presenter?.saveArrivalCity(textField.text)
         }
     }
 }
@@ -296,9 +313,13 @@ extension MainViewController {
         }
         
         (fromTextField.text, whereTextField.text) = (whereTextField.text, fromTextField.text)
+        
+        presenter?.saveDepartureCity(fromTextField.text)
+        presenter?.saveArrivalCity(whereTextField.text)
     }
     
     @objc func anyTravelChosen() {
+        presenter?.saveTransport(.any)
         unselectButtons()
         
         anyButton.backgroundColor = Constants.Color.selectedItem
@@ -311,6 +332,7 @@ extension MainViewController {
     }
     
     @objc func flightChosen() {
+        presenter?.saveTransport(.plane)
         unselectButtons()
         
         planeButton.backgroundColor = Constants.Color.selectedItem
@@ -321,6 +343,7 @@ extension MainViewController {
     }
     
     @objc func trainChosen() {
+        presenter?.saveTransport(.train)
         unselectButtons()
         
         trainButton.backgroundColor = Constants.Color.selectedItem
@@ -331,6 +354,7 @@ extension MainViewController {
     }
     
     @objc func suburbanChosen() {
+        presenter?.saveTransport(.suburban)
         unselectButtons()
         
         suburbanButton.backgroundColor = Constants.Color.selectedItem
@@ -341,6 +365,7 @@ extension MainViewController {
     }
     
     @objc func busChosen() {
+        presenter?.saveTransport(.bus)
         unselectButtons()
         
         busButton.backgroundColor = Constants.Color.selectedItem
@@ -351,12 +376,29 @@ extension MainViewController {
     }
     
     @objc func choosingDateAction(_ segmentedControl: UISegmentedControl) {
-        if segmentedControl.selectedSegmentIndex == 2 {
+        switch segmentedControl.selectedSegmentIndex {
+        case 2:
             activatingKeyboardTextField.becomeFirstResponder()
-        } else {
-            activatingKeyboardTextField.resignFirstResponder()
-            segmentedControl.setTitle("Дата", forSegmentAt: 2)
+            return
+        case 0:
+            presenter?.saveDate(.now)
+        case 1:
+            var tomorrow = Date.now
+            tomorrow.addTimeInterval(86400)
+            
+            presenter?.saveDate(tomorrow)
+        default:
+            break
         }
+        
+        activatingKeyboardTextField.resignFirstResponder()
+        segmentedControl.setTitle("Дата", forSegmentAt: 2)
+        
+        guard let datePicker =
+        activatingKeyboardTextField.inputView as? UIDatePicker else {
+            return
+        }
+        datePicker.setDate(.now, animated: false)
     }
     
     @objc func saveDate() {
@@ -364,6 +406,8 @@ extension MainViewController {
             return
         }
         let date = datePicker.date
+        
+        presenter?.saveDate(date)
         presenter?.formatDate(date)
         
         view.endEditing(true)

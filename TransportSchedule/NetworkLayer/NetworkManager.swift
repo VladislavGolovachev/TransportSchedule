@@ -34,7 +34,7 @@ final class NetworkManager: NetworkManagerProtocol {
             do {
                 let apiResponse = try JSONDecoder().decode(CityCodesResponse.self,
                                                            from: data)
-                completion(.success(apiResponse.countires))
+                completion(.success(apiResponse.countries))
             } catch {
                 completion(.failure(.unableToDecode))
             }

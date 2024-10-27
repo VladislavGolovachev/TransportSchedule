@@ -8,6 +8,7 @@
 import Foundation
 
 protocol MainViewProtocol: AnyObject {
+    func showAlert(message: String)
     func updateDate(with: String)
 }
 
@@ -18,12 +19,26 @@ protocol MainViewPresenterProtocol: AnyObject {
     
     func showScheduleScreen()
     func formatDate(_ date: Date)
+    
+    func saveDepartureCity(_ city: String?)
+    func saveArrivalCity(_ city: String?)
+    func saveDate(_ date: Date)
+    func saveTransport(_ transport: Transport)
+    
+    func downloadCityCodes()
 }
 
 final class MainPresenter: MainViewPresenterProtocol {
     weak var view: MainViewProtocol?
     let router: RouterProtocol
     let networkManager: NetworkManagerProtocol
+    
+    var departureCity           = ""
+    var arrivalCity             = ""
+    var date: Date              = .now
+    var transport: Transport    = .any
+    
+    var cityCodes: [String: String] = [:]
     
     init(view: MainViewProtocol,
          router: RouterProtocol,
@@ -35,6 +50,16 @@ final class MainPresenter: MainViewPresenterProtocol {
     
     func showScheduleScreen() {
         router.goToScheduleScreen()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yy"
+        let dateString = dateFormatter.string(from: date)
+        
+        print("Departure: ", departureCity)
+        print("Arrival: ", arrivalCity)
+        print("Date: ", dateString)
+        print("Transport: ", transport.rawValue)
+        print()
     }
     
     func formatDate(_ date: Date) {
@@ -44,5 +69,63 @@ final class MainPresenter: MainViewPresenterProtocol {
         let dateString = dateFormatter.string(from: date)
         
         view?.updateDate(with: dateString)
+    }
+    
+    func saveDepartureCity(_ city: String?) {
+        if let city {
+            departureCity = city
+        }
+    }
+    
+    func saveArrivalCity(_ city: String?) {
+        if let city {
+            arrivalCity = city
+        }
+    }
+    
+    func saveDate(_ date: Date) {
+        self.date = date
+    }
+    
+    func saveTransport(_ transport: Transport) {
+        self.transport = transport
+    }
+    
+    func downloadCityCodes() {
+        networkManager.getCityCodes { [weak self] result in
+            switch result {
+            case .success(let countries):
+                self?.pickOfRussiaCities(from: countries)
+                
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.view?.showAlert(message: error.rawValue)
+                }
+                return
+            }
+        }
+    }
+}
+
+//MARK: Private Functions
+extension MainPresenter {
+    private func pickOfRussiaCities(from countries: [Country]) {
+        for country in countries {
+            if country.title != "Россия" {
+                continue
+            }
+            for region in country.regions {
+                for city in region.settlements {
+                    if var code = city.codes["yandex_code"],
+                       !city.title.isEmpty && !code.isEmpty {
+                            code.removeFirst()
+                            cityCodes[city.title] = code
+                    }
+                }
+            }
+        }
+        for (city, code) in cityCodes {
+            print(city, code)
+        }
     }
 }

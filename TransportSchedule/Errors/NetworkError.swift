@@ -6,12 +6,12 @@
 //
 
 enum NetworkError: String, Error {
-    case networkConnection  = "Check your network connection"
-    case outdatedRequest    = "Request has been outdated"
-    case missingURL         = "Incorrect URL"
-    case clientProblem      = "Error caused by client's problem"
-    case serverProblem      = "Error caused by server's problem"
-    case missingData        = "Network response returned without data"
-    case unableToDecode     = "Data cannot be decoded"
-    case unknown            = "An unknown error was caused"
+    case networkConnection  = "Проверьте подключение к интернету"
+    case outdatedRequest    = "Время ожидания вышло"
+    case missingURL         = "Неверный URL"
+    case clientProblem      = "Проблема со стороны клиента"
+    case serverProblem      = "Проблема со стороны сервера"
+    case missingData        = "Сетевой ответ не имеет данных"
+    case unableToDecode     = "Данные не могут быть представлены"
+    case unknown            = "Неизвестная ошибка"
 }

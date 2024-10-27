@@ -6,6 +6,7 @@
 //
 
 enum Transport: String {
+    case any        = "any"
     case plane      = "plane"
     case train      = "train"
     case suburban   = "suburban"
