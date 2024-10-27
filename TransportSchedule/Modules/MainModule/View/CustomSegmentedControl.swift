@@ -11,7 +11,6 @@ final class CustomSegmentedControl: UISegmentedControl {
     
     private var cornerRadius: CGFloat = 0.0
     private var selectedSegmentColor = UIColor.white
-    
     private var imageView = {
         let image = UIImage(named: "DarkCalendar")
         
@@ -89,7 +88,7 @@ extension CustomSegmentedControl {
 //MARK: Private Local Constants
 extension CustomSegmentedControl {
     private enum Constants {
-        static let imageSize = CGSize(width: 24, height: 24)
+        static let imageSize = CGSize(width: 20, height: 20)
         static let imagePadding: CGFloat = 20
     }
 }

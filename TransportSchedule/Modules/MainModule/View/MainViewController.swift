@@ -181,13 +181,8 @@ final class MainViewController: UIViewController {
         view.layer.borderColor = Constants.Color.interface.cgColor
         view.layer.borderWidth = Constants.routeMenuBorderWidth
         
-        let separatorView = UIView()
-        
-        let stackView = UIStackView()
-        
         return view
     }()
-    
     private lazy var buttonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
             planeButton,
@@ -202,15 +197,48 @@ final class MainViewController: UIViewController {
         
         return stackView
     }()
+    private let activatingKeyboardTextField = {
+        let textField = UITextField(frame: .zero)
+        
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .inline
+        datePicker.minimumDate = .now
+        
+        textField.inputView = datePicker
+        
+        return textField
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         
+        let tapGesture = UITapGestureRecognizer(target: self,
+                                         action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+        
         addTargets()
         addSubviews()
         setupConstraints()
+    }
+    
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        
+        let toolBar = UIToolbar(frame: CGRect(x: 0, y: 0,
+                                              width: view.bounds.width,
+                                              height: 45))
+        
+        let flexibleSpace = UIBarButtonItem(systemItem: .flexibleSpace)
+        let barButton = UIBarButtonItem(title: "Сохранить",
+                                        style: .done,
+                                        target: self,
+                                        action: #selector(saveDate(_:)))
+        toolBar.setItems([flexibleSpace, barButton], animated: false)
+        activatingKeyboardTextField.inputAccessoryView = toolBar
     }
 }
 
@@ -221,6 +249,10 @@ extension MainViewController: MainViewProtocol {
 
 //MARK: Actions
 extension MainViewController {
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
     @objc func findAction() {
         presenter?.showScheduleScreen()
     }
@@ -275,6 +307,18 @@ extension MainViewController {
                            for: .normal)
         
         animateButton(busButton)
+    }
+    
+    @objc func choosingDateAction(_ segmentedControl: UISegmentedControl) {
+        if segmentedControl.selectedSegmentIndex == 2 {
+            activatingKeyboardTextField.becomeFirstResponder()
+        } else {
+            activatingKeyboardTextField.resignFirstResponder()
+        }
+    }
+    
+    @objc func saveDate(_ d: UIDatePicker) {
+        
     }
 }
 
@@ -337,11 +381,16 @@ extension MainViewController {
         busButton.addTarget(self,
                             action: #selector(busChosen),
                             for: .touchUpInside)
+        dateSegmentedControl.addTarget(self,
+                                       action: #selector(choosingDateAction(_:)),
+                                       for: .valueChanged)
     }
     
     private func addSubviews() {
         routeMenuView.addSubview(textFieldStackView)
         routeMenuView.addSubview(switchButton)
+        
+        view.addSubview(activatingKeyboardTextField)
         
         view.addSubview(titleLabel)
         view.addSubview(routeMenuView)

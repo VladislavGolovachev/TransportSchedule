@@ -12,6 +12,7 @@ final class ScheduleViewController: UIViewController {
     lazy var tableView = {
         let tableView = UITableView()
         
+        tableView.backgroundColor = .white
         tableView.allowsSelection = false
         
         tableView.separatorStyle = .none
