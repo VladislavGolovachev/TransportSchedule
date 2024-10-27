@@ -13,8 +13,7 @@ protocol ScheduleViewProtocol: AnyObject {
 
 protocol ScheduleViewPresenterProtocol: AnyObject {
     init(view: ScheduleViewProtocol,
-         router: RouterProtocol,
-         networkManager: NetworkManagerProtocol)
+         router: RouterProtocol)
     
     func showMainScreen()
 }
@@ -22,14 +21,11 @@ protocol ScheduleViewPresenterProtocol: AnyObject {
 final class SchedulePresenter: ScheduleViewPresenterProtocol {
     weak var view: ScheduleViewProtocol?
     let router: RouterProtocol
-    let networkManager: NetworkManagerProtocol
     
     init(view: ScheduleViewProtocol,
-         router: RouterProtocol,
-         networkManager: NetworkManagerProtocol) {
+         router: RouterProtocol) {
         self.view = view
         self.router = router
-        self.networkManager = networkManager
     }
     
     func showMainScreen() {

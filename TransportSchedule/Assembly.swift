@@ -26,10 +26,8 @@ struct Assembly: AssemblyProtocol {
     
     func createScheduleModule(router: RouterProtocol) -> UIViewController {
         let vc = ScheduleViewController()
-        let networkManager = NetworkManager()
         let presenter = SchedulePresenter(view: vc,
-                                          router: router,
-                                          networkManager: networkManager)
+                                          router: router)
         vc.presenter = presenter
         
         return vc

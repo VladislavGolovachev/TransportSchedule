@@ -19,6 +19,14 @@
 		823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D42CCCFEE10005DF41 /* NetworkManager.swift */; };
 		823B33D82CCD1D8F0005DF41 /* RouteInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */; };
 		823B33DA2CCD6A9E0005DF41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 823B33D92CCD6A9E0005DF41 /* Assets.xcassets */; };
+		823D21A12CCE3E5400D79481 /* YandexScheduleAPIEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21A02CCE3E4B00D79481 /* YandexScheduleAPIEndPoint.swift */; };
+		823D21A42CCE3E8700D79481 /* CityCodesResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21A32CCE3E7C00D79481 /* CityCodesResponse.swift */; };
+		823D21A62CCE3ED100D79481 /* ScheduleResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21A52CCE3E8A00D79481 /* ScheduleResponse.swift */; };
+		823D21A82CCE3EE800D79481 /* NetworkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21A72CCE3EE500D79481 /* NetworkRouter.swift */; };
+		823D21AA2CCE3EEF00D79481 /* EndPointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21A92CCE3EEB00D79481 /* EndPointType.swift */; };
+		823D21B02CCE3FA400D79481 /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21AF2CCE3FA000D79481 /* NetworkError.swift */; };
+		823D21B52CCE41D800D79481 /* RouteInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21B42CCE41CF00D79481 /* RouteInfo.swift */; };
+		823D21B82CCE426700D79481 /* Transport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823D21B72CCE426200D79481 /* Transport.swift */; };
 		82B04A372CCA539A008CD974 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A362CCA5398008CD974 /* Router.swift */; };
 		82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A382CCA53F5008CD974 /* Assembly.swift */; };
 		82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */; };
@@ -39,6 +47,14 @@
 		823B33D42CCCFEE10005DF41 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		823B33D72CCD1D8F0005DF41 /* RouteInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteInfoCell.swift; sourceTree = "<group>"; };
 		823B33D92CCD6A9E0005DF41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		823D21A02CCE3E4B00D79481 /* YandexScheduleAPIEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YandexScheduleAPIEndPoint.swift; sourceTree = "<group>"; };
+		823D21A32CCE3E7C00D79481 /* CityCodesResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityCodesResponse.swift; sourceTree = "<group>"; };
+		823D21A52CCE3E8A00D79481 /* ScheduleResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleResponse.swift; sourceTree = "<group>"; };
+		823D21A72CCE3EE500D79481 /* NetworkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRouter.swift; sourceTree = "<group>"; };
+		823D21A92CCE3EEB00D79481 /* EndPointType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPointType.swift; sourceTree = "<group>"; };
+		823D21AF2CCE3FA000D79481 /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		823D21B42CCE41CF00D79481 /* RouteInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteInfo.swift; sourceTree = "<group>"; };
+		823D21B72CCE426200D79481 /* Transport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transport.swift; sourceTree = "<group>"; };
 		82B04A362CCA5398008CD974 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		82B04A382CCA53F5008CD974 /* Assembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Assembly.swift; sourceTree = "<group>"; };
 		82B04A3B2CCA57C9008CD974 /* MainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPresenter.swift; sourceTree = "<group>"; };
@@ -89,6 +105,7 @@
 				82B04A362CCA5398008CD974 /* Router.swift */,
 				823B33D62CCCFEEA0005DF41 /* NetworkLayer */,
 				82B04A3D2CCA6407008CD974 /* Modules */,
+				823D21AE2CCE3F9B00D79481 /* Errors */,
 				823B33DB2CCD9D070005DF41 /* Other */,
 				823B33D92CCD6A9E0005DF41 /* Assets.xcassets */,
 				823AE7552CCA3D5000754161 /* LaunchScreen.storyboard */,
@@ -101,6 +118,7 @@
 			isa = PBXGroup;
 			children = (
 				823B33D42CCCFEE10005DF41 /* NetworkManager.swift */,
+				823D219E2CCE3E1200D79481 /* YandexScheduleAPI */,
 			);
 			path = NetworkLayer;
 			sourceTree = "<group>";
@@ -113,9 +131,54 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
+		823D219E2CCE3E1200D79481 /* YandexScheduleAPI */ = {
+			isa = PBXGroup;
+			children = (
+				823D21A02CCE3E4B00D79481 /* YandexScheduleAPIEndPoint.swift */,
+				823D21A22CCE3E7200D79481 /* Response */,
+				823D21A72CCE3EE500D79481 /* NetworkRouter.swift */,
+				823D21A92CCE3EEB00D79481 /* EndPointType.swift */,
+			);
+			path = YandexScheduleAPI;
+			sourceTree = "<group>";
+		};
+		823D21A22CCE3E7200D79481 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				823D21A32CCE3E7C00D79481 /* CityCodesResponse.swift */,
+				823D21A52CCE3E8A00D79481 /* ScheduleResponse.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
+		823D21AE2CCE3F9B00D79481 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				823D21AF2CCE3FA000D79481 /* NetworkError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		823D21B32CCE41CA00D79481 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				823D21B42CCE41CF00D79481 /* RouteInfo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		823D21B62CCE423E00D79481 /* CommonModel */ = {
+			isa = PBXGroup;
+			children = (
+				823D21B72CCE426200D79481 /* Transport.swift */,
+			);
+			path = CommonModel;
+			sourceTree = "<group>";
+		};
 		82B04A3A2CCA57C0008CD974 /* MainModule */ = {
 			isa = PBXGroup;
 			children = (
+				823D21B32CCE41CA00D79481 /* Model */,
 				82B04A3E2CCA6410008CD974 /* View */,
 				82B04A3F2CCA6413008CD974 /* Presenter */,
 			);
@@ -127,6 +190,7 @@
 			children = (
 				82B04A3A2CCA57C0008CD974 /* MainModule */,
 				82B04A402CCA642D008CD974 /* ScheduleModule */,
+				823D21B62CCE423E00D79481 /* CommonModel */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -250,13 +314,21 @@
 				82B04A3C2CCA57CC008CD974 /* MainPresenter.swift in Sources */,
 				8234004D2CCC66BF00D33B70 /* ScheduleViewController.swift in Sources */,
 				823B33D52CCCFEE70005DF41 /* NetworkManager.swift in Sources */,
+				823D21A62CCE3ED100D79481 /* ScheduleResponse.swift in Sources */,
 				823B33D82CCD1D8F0005DF41 /* RouteInfoCell.swift in Sources */,
+				823D21B82CCE426700D79481 /* Transport.swift in Sources */,
+				823D21A42CCE3E8700D79481 /* CityCodesResponse.swift in Sources */,
 				823AE74F2CCA3D4D00754161 /* MainViewController.swift in Sources */,
+				823D21A82CCE3EE800D79481 /* NetworkRouter.swift in Sources */,
 				82B04A392CCA53F5008CD974 /* Assembly.swift in Sources */,
 				823AE74B2CCA3D4D00754161 /* AppDelegate.swift in Sources */,
+				823D21B52CCE41D800D79481 /* RouteInfo.swift in Sources */,
 				8234004F2CCC66D800D33B70 /* SchedulePresenter.swift in Sources */,
+				823D21AA2CCE3EEF00D79481 /* EndPointType.swift in Sources */,
 				82B04A372CCA539A008CD974 /* Router.swift in Sources */,
 				823AE74D2CCA3D4D00754161 /* SceneDelegate.swift in Sources */,
+				823D21A12CCE3E5400D79481 /* YandexScheduleAPIEndPoint.swift in Sources */,
+				823D21B02CCE3FA400D79481 /* NetworkError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
