@@ -9,7 +9,8 @@ import UIKit
 
 protocol AssemblyProtocol {
     func createMainModule(router: RouterProtocol) -> UIViewController
-    func createScheduleModule(router: RouterProtocol) -> UIViewController
+    func createScheduleModule(router: RouterProtocol,
+                              routeInfo: RouteInfo) -> UIViewController
 }
 
 struct Assembly: AssemblyProtocol {
@@ -24,10 +25,14 @@ struct Assembly: AssemblyProtocol {
         return vc
     }
     
-    func createScheduleModule(router: RouterProtocol) -> UIViewController {
+    func createScheduleModule(router: RouterProtocol,
+                              routeInfo: RouteInfo) -> UIViewController {
         let vc = ScheduleViewController()
+        let networkManager = NetworkManager()
         let presenter = SchedulePresenter(view: vc,
-                                          router: router)
+                                          router: router,
+                                          routeInfo: routeInfo,
+                                          networkManager: networkManager)
         vc.presenter = presenter
         
         return vc

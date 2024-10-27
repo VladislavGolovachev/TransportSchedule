@@ -21,7 +21,6 @@ final class MainViewController: UIViewController {
         
         return label
     }()
-    
     let fromTextField = {
         let textField = UITextField()
         
@@ -30,13 +29,13 @@ final class MainViewController: UIViewController {
         textField.autocorrectionType = .no
         
         textField.font = Constants.Font.textField
+        textField.textColor = Constants.Color.Text.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
         let attributedString = NSAttributedString(string: "Откуда",
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
-        
         
         return textField
     }()
@@ -48,6 +47,7 @@ final class MainViewController: UIViewController {
         textField.autocorrectionType = .no
         
         textField.font = Constants.Font.textField
+        textField.textColor = Constants.Color.Text.textField
         let placeholderAttributes = [
             NSAttributedString.Key.foregroundColor: Constants.Color.placeholder
         ]
@@ -55,10 +55,8 @@ final class MainViewController: UIViewController {
                                                   attributes: placeholderAttributes)
         textField.attributedPlaceholder = attributedString
         
-        
         return textField
     }()
-    
     let switchButton = {
         let button = UIButton()
         let image = UIImage(named: "UpDownArrows")
@@ -67,17 +65,13 @@ final class MainViewController: UIViewController {
         
         return button
     }()
-    
     lazy var dateSegmentedControl: UISegmentedControl = {
         let segmentedControl = CustomSegmentedControl(cornerRadius: Constants.cornerRadius)
-        
-        //Cos Apple's UISegmentedControl makes color darker
-        segmentedControl.backgroundColor = Constants.Color.interface.withAlphaComponent(0.4)
         segmentedControl.setSelectedSegmentColor(Constants.Color.selectedItem)
         
-        segmentedControl.insertSegment(withTitle: "Сегодня",at: 0, animated: false)
-        segmentedControl.insertSegment(withTitle: "Завтра", at: 1, animated: false)
-        segmentedControl.insertSegment(withTitle: "Дата", at: 2, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.today, at: 0, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.tomorrow, at: 1, animated: false)
+        segmentedControl.insertSegment(withTitle: Constants.Text.date, at: 2, animated: false)
         segmentedControl.selectedSegmentIndex = 0
         
         segmentedControl.setTitleTextAttributes(notSelectedTextAttributes, for: .normal)
@@ -85,7 +79,6 @@ final class MainViewController: UIViewController {
         
         return segmentedControl
     }()
-    
     lazy var anyButton = {
         let button = UIButton()
         button.backgroundColor = Constants.Color.selectedItem
@@ -96,7 +89,7 @@ final class MainViewController: UIViewController {
         button.configuration = config
         
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: selectedTextAttributes)
         button.setAttributedTitle(attrString,
                                   for: .normal)
@@ -143,7 +136,6 @@ final class MainViewController: UIViewController {
         
         return button
     }()
-    
     lazy var findButton = {
         let button = UIButton()
         button.backgroundColor = Constants.Color.findButton
@@ -167,6 +159,14 @@ final class MainViewController: UIViewController {
                                   for: .highlighted)
         
         return button
+    }()
+    let activityIndicator = {
+        let activityIndicator = UIActivityIndicatorView(style: .medium)
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.startAnimating()
+        activityIndicator.color = .darkGray
+        
+        return activityIndicator
     }()
     
     private lazy var textFieldStackView: UIStackView = {
@@ -221,8 +221,9 @@ final class MainViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter?.downloadCityCodes()
         
-        view.backgroundColor = .white
+        view.backgroundColor = Constants.Color.background
         
         let tapGesture = UITapGestureRecognizer(target: self,
                                          action: #selector(dismissKeyboard))
@@ -256,6 +257,18 @@ final class MainViewController: UIViewController {
 
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
+    func stopActivityIndicator() {
+        activityIndicator.stopAnimating()
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Закрыть", style: .default))
+        self.present(alert, animated: true)
+    }
+    
     func updateDate(with dateString: String) {
         dateSegmentedControl.setTitle(dateString, forSegmentAt: 2)
     }
@@ -266,7 +279,37 @@ extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
-        return (string == "\n" || string == " " ? false : true)
+        if string == "" {
+            return true
+        }
+        if string == "\n" {
+            return false
+        }
+        
+        if let text = textField.text {
+            if text.isEmpty {
+                if string == " " {
+                    return false
+                }
+                return true
+            }
+            
+            let index = range.location
+            if index == 0 {
+                if string == " " {
+                    return false
+                } else {
+                    return true
+                }
+            }
+            
+            let stringIndex = text.index(text.startIndex, offsetBy: index - 1)
+            if !text.isEmpty && string == " " && text[stringIndex] == " " {
+                return false
+            }
+        }
+        
+        return true
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -274,6 +317,14 @@ extension MainViewController: UITextFieldDelegate {
             whereTextField.becomeFirstResponder()
         } else {
             textField.resignFirstResponder()
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.tag == 0 {
+            presenter?.saveDepartureCity(textField.text)
+        } else {
+            presenter?.saveArrivalCity(textField.text)
         }
     }
 }
@@ -296,14 +347,18 @@ extension MainViewController {
         }
         
         (fromTextField.text, whereTextField.text) = (whereTextField.text, fromTextField.text)
+        
+        presenter?.saveDepartureCity(fromTextField.text)
+        presenter?.saveArrivalCity(whereTextField.text)
     }
     
     @objc func anyTravelChosen() {
+        presenter?.saveTransport(.any)
         unselectButtons()
         
         anyButton.backgroundColor = Constants.Color.selectedItem
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: selectedTextAttributes)
         anyButton.setAttributedTitle(attrString, for: .normal)
         
@@ -311,6 +366,7 @@ extension MainViewController {
     }
     
     @objc func flightChosen() {
+        presenter?.saveTransport(.plane)
         unselectButtons()
         
         planeButton.backgroundColor = Constants.Color.selectedItem
@@ -321,6 +377,7 @@ extension MainViewController {
     }
     
     @objc func trainChosen() {
+        presenter?.saveTransport(.train)
         unselectButtons()
         
         trainButton.backgroundColor = Constants.Color.selectedItem
@@ -331,6 +388,7 @@ extension MainViewController {
     }
     
     @objc func suburbanChosen() {
+        presenter?.saveTransport(.suburban)
         unselectButtons()
         
         suburbanButton.backgroundColor = Constants.Color.selectedItem
@@ -341,6 +399,7 @@ extension MainViewController {
     }
     
     @objc func busChosen() {
+        presenter?.saveTransport(.bus)
         unselectButtons()
         
         busButton.backgroundColor = Constants.Color.selectedItem
@@ -351,12 +410,29 @@ extension MainViewController {
     }
     
     @objc func choosingDateAction(_ segmentedControl: UISegmentedControl) {
-        if segmentedControl.selectedSegmentIndex == 2 {
+        switch segmentedControl.selectedSegmentIndex {
+        case 2:
             activatingKeyboardTextField.becomeFirstResponder()
-        } else {
-            activatingKeyboardTextField.resignFirstResponder()
-            segmentedControl.setTitle("Дата", forSegmentAt: 2)
+            return
+        case 0:
+            presenter?.saveDate(.now)
+        case 1:
+            var tomorrow = Date.now
+            tomorrow.addTimeInterval(86400)
+            
+            presenter?.saveDate(tomorrow)
+        default:
+            break
         }
+        
+        activatingKeyboardTextField.resignFirstResponder()
+        segmentedControl.setTitle(Constants.Text.date, forSegmentAt: 2)
+        
+        guard let datePicker =
+        activatingKeyboardTextField.inputView as? UIDatePicker else {
+            return
+        }
+        datePicker.setDate(.now, animated: false)
     }
     
     @objc func saveDate() {
@@ -364,6 +440,8 @@ extension MainViewController {
             return
         }
         let date = datePicker.date
+        
+        presenter?.saveDate(date)
         presenter?.formatDate(date)
         
         view.endEditing(true)
@@ -392,7 +470,7 @@ extension MainViewController {
     private func unselectButtons() {
         anyButton.backgroundColor = Constants.Color.interface
         let attrString =
-        NSAttributedString(string: "любой",
+        NSAttributedString(string: Constants.Text.any,
                            attributes: notSelectedTextAttributes)
         anyButton.setAttributedTitle(attrString, for: .normal)
         
@@ -449,6 +527,7 @@ extension MainViewController {
         view.addSubview(anyButton)
         view.addSubview(buttonStackView)
         view.addSubview(findButton)
+        view.addSubview(activityIndicator)
     }
     
     private func setupConstraints() {
@@ -460,6 +539,7 @@ extension MainViewController {
         anyButton.translatesAutoresizingMaskIntoConstraints             = false
         buttonStackView.translatesAutoresizingMaskIntoConstraints       = false
         findButton.translatesAutoresizingMaskIntoConstraints            = false
+        activityIndicator.translatesAutoresizingMaskIntoConstraints     = false
         
         let safeArea = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
@@ -519,7 +599,11 @@ extension MainViewController {
                                                 constant: Constants.Padding.Global.left),
             findButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
                                             constant: -Constants.Padding.Global.right),
-            findButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight)
+            findButton.heightAnchor.constraint(equalToConstant: Constants.itemHeight),
+            
+            activityIndicator.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor,
+                                                        constant: -Constants.Padding.Global.right),
+            activityIndicator.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor)
         ])
     }
 }
@@ -541,7 +625,6 @@ extension MainViewController {
             static let textField    = UIFont.systemFont(ofSize: 16, weight: .semibold)
             static let common       = UIFont.systemFont(ofSize: 14, weight: .regular)
         }
-        
         enum Color {
             static let interface    = UIColor(red: (235.0 / 255.0),
                                               green: (235.0 / 255.0),
@@ -553,20 +636,20 @@ extension MainViewController {
                                               alpha: 1)
             static let selectedItem = UIColor.darkGray
             static let placeholder  = UIColor.lightGray
+            static let background   = UIColor.white
             
             enum Text {
                 static let title        = UIColor.black
                 static let selected     = UIColor.white
                 static let notSelected  = UIColor.black
+                static let textField    = UIColor.black
             }
         }
-        
         enum Spacing {
             static let routeMenu: CGFloat    = 10
             static let global: CGFloat       = 15
             static let buttonStack: CGFloat  = 10
         }
-        
         enum Padding {
             enum Global {
                 static let top: CGFloat     = 10
@@ -580,6 +663,12 @@ extension MainViewController {
                 static let right: CGFloat   = 14
                 static let bottom: CGFloat  = 14
             }
+        }
+        enum Text {
+            static let any      = "любой"
+            static let date     = "Дата"
+            static let tomorrow = "Завтра"
+            static let today    = "Сегодня"
         }
     }
 }

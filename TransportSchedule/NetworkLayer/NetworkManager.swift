@@ -10,7 +10,7 @@ import Foundation
 protocol NetworkManagerProtocol {
     func getCityCodes(completion: @escaping (Result<[Country], NetworkError>) -> Void)
     func getSchedule(routeInfo: RouteInfo,
-                     completion: @escaping (Result<[ScheduleSegment], NetworkError>) -> Void)
+                     completion: @escaping (Result<ScheduleResponse, NetworkError>) -> Void)
 }
 
 final class NetworkManager: NetworkManagerProtocol {
@@ -34,7 +34,7 @@ final class NetworkManager: NetworkManagerProtocol {
             do {
                 let apiResponse = try JSONDecoder().decode(CityCodesResponse.self,
                                                            from: data)
-                completion(.success(apiResponse.countires))
+                completion(.success(apiResponse.countries))
             } catch {
                 completion(.failure(.unableToDecode))
             }
@@ -42,7 +42,7 @@ final class NetworkManager: NetworkManagerProtocol {
     }
     
     func getSchedule(routeInfo: RouteInfo,
-                     completion: @escaping (Result<[ScheduleSegment], NetworkError>) -> Void) {
+                     completion: @escaping (Result<ScheduleResponse, NetworkError>) -> Void) {
         router.request(.schedule(routeInfo: routeInfo)) { [weak self] data, response, error in
             if error != nil {
                 completion(.failure(.networkConnection))
@@ -60,7 +60,7 @@ final class NetworkManager: NetworkManagerProtocol {
             do {
                 let apiResponse = try JSONDecoder().decode(ScheduleResponse.self,
                                                            from: data)
-                completion(.success(apiResponse.segments))
+                completion(.success(apiResponse))
             } catch {
                 completion(.failure(.unableToDecode))
             }
