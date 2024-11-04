@@ -321,6 +321,9 @@ extension MainViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        if let lastChar = textField.text?.last, lastChar == " " {
+            textField.text?.removeLast()
+        }
         if textField.tag == 0 {
             presenter?.saveDepartureCity(textField.text)
         } else {
