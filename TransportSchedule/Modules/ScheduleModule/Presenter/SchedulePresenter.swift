@@ -62,6 +62,13 @@ final class SchedulePresenter: ScheduleViewPresenterProtocol {
 
 //MARK: Private Functions
 extension SchedulePresenter {
+    private var defautDateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        
+        return dateFormatter
+    }
+    
     private func formatScheduleData(from schedule: ScheduleResponse) {
         var ridesInfo = [RideInfo]()
         let route = schedule.searchInfo.departureCity.title + "-" + schedule.searchInfo.arrivalCity.title
@@ -103,16 +110,14 @@ extension SchedulePresenter {
     }
     
     private func formatDateString(_ dateString: String) -> (String, String) {
-        let dateFormatterFrom   = DateFormatter()
-        dateFormatterFrom.timeZone = TimeZone(identifier: "UTC")
+        let dateFormatterFrom = defautDateFormatter
         dateFormatterFrom.dateFormat = "yyyy-MM-dd'T'HH:mm"
         
         let string = String(dateString.prefix(16))
-        guard let dateToFormat = dateFormatterFrom.date(from: string) else {return ("", "")}
+        guard let dateToFormat = dateFormatterFrom.date(from: string) else { return ("", "") }
         
-        
-        let dateFormatterTo = DateFormatter()
-        let timeFormatterTo = DateFormatter()
+        let dateFormatterTo = defautDateFormatter
+        let timeFormatterTo = defautDateFormatter
         dateFormatterTo.dateStyle = .medium
         timeFormatterTo.dateFormat = "hh:mm"
         

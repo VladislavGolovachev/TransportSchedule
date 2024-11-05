@@ -88,6 +88,7 @@ extension ScheduleViewController: UITableViewDataSource {
         guard let ride = currentRides?[indexPath.row] else {
             return cell
         }
+        
         cell.setRoute(ride.route)
         cell.setCarrierCompany(ride.carrier.company)
         cell.setVehicle(ride.carrier.vehicle)
@@ -102,7 +103,8 @@ extension ScheduleViewController: UITableViewDataSource {
 
 //MARK: UITableViewDelegate
 extension ScheduleViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView,
+                   heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
 }
@@ -117,7 +119,7 @@ extension ScheduleViewController {
 //MARK: Private Functions
 extension ScheduleViewController {
     private func setupContraints() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.translatesAutoresizingMaskIntoConstraints         = false
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
         let safeArea = view.safeAreaLayoutGuide
