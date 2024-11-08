@@ -8,7 +8,9 @@
 import UIKit
 
 final class MainViewController: UIViewController {
+    //MARK: - Properties
     var presenter: MainViewPresenterProtocol?
+    var suggestedTableViewController: SuggestedTableViewController?
     
     let titleLabel = {
         let label = UILabel()
@@ -219,7 +221,7 @@ final class MainViewController: UIViewController {
         return textField
     }()
     
-    //MARK: ViewController's lifecycle
+    //MARK: - ViewController's lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.downloadCityCodes()
@@ -227,12 +229,17 @@ final class MainViewController: UIViewController {
         view.backgroundColor = Constants.Color.background
         
         let tapGesture = UITapGestureRecognizer(target: self,
-                                         action: #selector(dismissKeyboard))
+                                                action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
         fromTextField.delegate = self
         whereTextField.delegate = self
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(textFieldChanged),
+                                               name: UITextField.textDidChangeNotification,
+                                               object: nil)
         
         addTargets()
         addSubviews()
@@ -256,8 +263,40 @@ final class MainViewController: UIViewController {
     }
 }
 
-//MARK: MainViewProtocol
+//MARK: - MainViewProtocol
 extension MainViewController: MainViewProtocol {
+    func showSuggestedTable(with cityNames: [String]) {
+        if cityNames.isEmpty {
+            suggestedTableViewController = nil
+            dismiss(animated: true)
+            return
+        }
+        let textField = (fromTextField.isFirstResponder ? fromTextField : whereTextField)
+        let point = CGPoint(x: textField.bounds.minX,
+                            y: textField.bounds.maxY)
+        
+        if suggestedTableViewController == nil {
+            suggestedTableViewController = SuggestedTableViewController(delegate: self)
+            suggestedTableViewController?.modalPresentationStyle = .popover
+            suggestedTableViewController?.preferredContentSize = CGSize(width: routeMenuView.frame.width,
+                                                                        height: 200)
+            
+            let popover = suggestedTableViewController?.popoverPresentationController
+            popover?.sourceView = textField
+            popover?.delegate = self
+            popover?.sourceRect = CGRect(origin: point, size: .zero)
+            popover?.permittedArrowDirections = .up
+        }
+        guard let vc = suggestedTableViewController else { return }
+        vc.setCities(cityNames)
+        
+        if presentedViewController != nil {
+            vc.reload()
+        } else {
+            present(vc, animated: true)
+        }
+    }
+    
     func stopActivityIndicator() {
         activityIndicator.stopAnimating()
     }
@@ -275,44 +314,34 @@ extension MainViewController: MainViewProtocol {
     }
 }
 
-//MARK: UITextFieldDelegate
+//MARK: - UIPopoverPresentationControllerDelegate
+extension MainViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
+//MARK: - SuggestedTableDelegate
+extension MainViewController: SuggestedTableDelegate {
+    func updateTextField(with text: String) {
+        let firstTextField = (fromTextField.isFirstResponder ? fromTextField : whereTextField)
+        
+        firstTextField.text = text
+        dismissKeyboard()
+    }
+}
+
+//MARK: - UITextFieldDelegate
 extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
-        let forbiddenCharacters = ["\n", ";", ":", "/", ""]
-        if string == "" {
-            return true
+        if let result = presenter?.validateInputText(textField.text,
+                                                     in: range,
+                                                     with: string) {
+            return result
         }
-        if forbiddenCharacters.firstIndex(of: string) != nil {
-            return false
-        }
-        
-        ///if the first character is space
-        let index = range.location
-        if index == 0 {
-            if string == " " {
-                return false
-            }
-        } else
-        if let text = textField.text {
-            ///when pushing space after space
-            let stringIndex = text.index(text.startIndex,
-                                         offsetBy: index - 1)
-            if string == " " && (text[stringIndex] == " " || text[stringIndex] == "-") {
-                return false
-            }
-            ///when pushing space before space
-            if let size = textField.text?.count, index < size {
-                let stringIndex = text.index(text.startIndex,
-                                             offsetBy: index)
-                if text[stringIndex] == " " || text[stringIndex] == "-" {
-                    return false
-                }
-            }
-        }
-        
-        return true
+        return false
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -324,6 +353,9 @@ extension MainViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        suggestedTableViewController = nil
+        dismiss(animated: true)
+        
         if let lastChar = textField.text?.last, lastChar == " " {
             textField.text?.removeLast()
         }
@@ -335,8 +367,23 @@ extension MainViewController: UITextFieldDelegate {
     }
 }
 
-//MARK: Actions
+//MARK: - Actions
 extension MainViewController {
+    @objc func textFieldChanged() {
+        var textField = fromTextField
+        if whereTextField.isFirstResponder {
+            textField = whereTextField
+        }
+        
+        guard let text = textField.text, !text.isEmpty else {
+            suggestedTableViewController = nil
+            dismiss(animated: true)
+            
+            return
+        }
+        presenter?.prepareSuggestWindow(with: text)
+    }
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
@@ -454,7 +501,7 @@ extension MainViewController {
     }
 }
 
-//MARK: Private Functions and Variables
+//MARK: - Private Functions and Variables
 extension MainViewController {
     private var selectedTextAttributes: [NSAttributedString.Key: Any] {[
         .font: Constants.Font.common,
@@ -614,7 +661,7 @@ extension MainViewController {
     }
 }
 
-//MARK: Private Local Constants
+//MARK: - Private Local Constants
 extension MainViewController {
     private enum Constants {
         static let switchButtonSize = CGSize(width: 22, height: 22)

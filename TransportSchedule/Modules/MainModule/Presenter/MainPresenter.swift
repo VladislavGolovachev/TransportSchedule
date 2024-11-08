@@ -11,6 +11,7 @@ protocol MainViewProtocol: AnyObject {
     func showAlert(title: String, message: String)
     func updateDate(with: String)
     func stopActivityIndicator()
+    func showSuggestedTable(with cityNames: [String])
 }
 
 protocol MainViewPresenterProtocol: AnyObject {
@@ -19,6 +20,10 @@ protocol MainViewPresenterProtocol: AnyObject {
          networkManager: NetworkManagerProtocol)
     
     func showScheduleScreen()
+    func validateInputText(_: String?,
+                           in range: NSRange,
+                           with replacementString: String) -> Bool
+    func prepareSuggestWindow(with textToFind: String)
     func formatDate(_ date: Date)
     
     func saveDepartureCity(_ city: String?)
@@ -29,7 +34,9 @@ protocol MainViewPresenterProtocol: AnyObject {
     func downloadCityCodes()
 }
 
+//MARK: - MainViewPresenterProtocol
 final class MainPresenter: MainViewPresenterProtocol {
+    //MARK: - Properties
     weak var view: MainViewProtocol?
     let router: RouterProtocol
     let networkManager: NetworkManagerProtocol
@@ -41,12 +48,59 @@ final class MainPresenter: MainViewPresenterProtocol {
     
     var cityCodes: [String: String] = [:]
     
+    //MARK: - Initiaizer
     init(view: MainViewProtocol,
          router: RouterProtocol,
          networkManager: NetworkManagerProtocol) {
         self.view = view
         self.router = router
         self.networkManager = networkManager
+    }
+    
+    //MARK: - Functions
+    func validateInputText(_ text: String?,
+                           in range: NSRange,
+                           with replacementString: String) -> Bool {
+        if replacementString == "" {
+            return true
+        }
+        if Constants.forbiddenCharacters.firstIndex(of: replacementString) != nil {
+            return false
+        }
+        
+        ///if the first character is space
+        let index = range.location
+        if index == 0 {
+            if replacementString == " " || replacementString == "-" {
+                return false
+            }
+        } else
+        if let text {
+            ///when pushing space after space
+            let stringIndex = text.index(text.startIndex,
+                                         offsetBy: index - 1)
+            if (replacementString  == " " ||
+                replacementString == "-") &&
+                (text[stringIndex] == " " ||
+                text[stringIndex] == "-") {
+                return false
+            }
+            ///when pushing space before space
+            if index < text.count {
+                let stringIndex = text.index(text.startIndex,
+                                             offsetBy: index)
+                if text[stringIndex] == " " || text[stringIndex] == "-" {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    func prepareSuggestWindow(with textToFind: String) {
+        let cities = citiesWithSuffix(textToFind)
+        view?.showSuggestedTable(with: cities)
     }
     
     func showScheduleScreen() {
@@ -122,8 +176,15 @@ final class MainPresenter: MainViewPresenterProtocol {
     }
 }
 
-//MARK: Private Functions
+//MARK: - Private Functions
 extension MainPresenter {
+    private func citiesWithSuffix(_ text: String) -> [String] {
+        let cities = cityCodes.keys.filter {
+            $0.hasPrefix(text)
+        }
+        return cities
+    }
+    
     private func pickOfRussiaCities(from countries: [Country]) {
         for country in countries {
             if country.title != Constants.countryLookingFor {
@@ -147,12 +208,13 @@ extension MainPresenter {
     }
 }
 
-//MARK: Private Local Constants
+//MARK: - Private Local Constants
 extension MainPresenter {
     private enum Constants {
         static let countryLookingFor = "Россия"
         static let usedAPICode = "yandex_code"
         static let errorCausedTitle = "Возникла ошибка"
+        static let forbiddenCharacters = ["\n", ";", ":", "/", "'", "[", "]", "{", "}"]
         enum DataNotLoaded {
             static let title = "Предупреждение"
             static let message = "Данные необходимые для работы еще не загружены. Дождитесь, пока индикатор в верхнем углу экрана пропадет"
