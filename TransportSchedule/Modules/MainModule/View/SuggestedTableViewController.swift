@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OfferTableViewController: UITableViewController {
+final class SuggestedTableViewController: UITableViewController {
     //MARK: - Properties
     private let cellIdentifier = "CityCell"
     private var cities: [String]?
@@ -35,7 +35,7 @@ final class OfferTableViewController: UITableViewController {
 }
 
 //MARK: - Public Functions
-extension OfferTableViewController {
+extension SuggestedTableViewController {
     public func setCities(_ cities: [String]) {
         self.cities = cities
     }
@@ -46,7 +46,7 @@ extension OfferTableViewController {
 }
 
 //MARK: - UITableViewDataSource
-extension OfferTableViewController {
+extension SuggestedTableViewController {
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
         return cities?.count ?? 0
@@ -68,7 +68,7 @@ extension OfferTableViewController {
 }
 
 //MARK: - UITableViewDelegate
-extension OfferTableViewController {
+extension SuggestedTableViewController {
     func tableView(_ tableView: UITableView,
                 willSelectRowAt indexPath: IndexPath) {
         print("will be selected")

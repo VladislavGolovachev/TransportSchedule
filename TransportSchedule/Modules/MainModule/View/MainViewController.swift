@@ -10,7 +10,7 @@ import UIKit
 final class MainViewController: UIViewController {
     //MARK: - Properties
     var presenter: MainViewPresenterProtocol?
-    var offerTableViewController: OfferTableViewController?
+    var suggestedTableViewController: SuggestedTableViewController?
     
     let titleLabel = {
         let label = UILabel()
@@ -265,13 +265,13 @@ final class MainViewController: UIViewController {
 
 //MARK: - MainViewProtocol
 extension MainViewController: MainViewProtocol {
-    func showOfferTable(with cityNames: [String]) {
-        if offerTableViewController == nil {
-            offerTableViewController = OfferTableViewController(cities: cityNames)
-            offerTableViewController?.preferredContentSize = CGSizeMake(fromTextField.frame.width, 100)
-            offerTableViewController?.modalPresentationStyle = .popover
+    func showSuggestedTable(with cityNames: [String]) {
+        if suggestedTableViewController == nil {
+            suggestedTableViewController = SuggestedTableViewController(cities: cityNames)
+            suggestedTableViewController?.preferredContentSize = CGSizeMake(fromTextField.frame.width, 100)
+            suggestedTableViewController?.modalPresentationStyle = .popover
         }
-        guard let vc = offerTableViewController else { return }
+        guard let vc = suggestedTableViewController else { return }
         vc.setCities(cityNames)
         
         present(vc, animated: true)
@@ -321,7 +321,7 @@ extension MainViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        offerTableViewController = nil
+        suggestedTableViewController = nil
         
         if let lastChar = textField.text?.last, lastChar == " " {
             textField.text?.removeLast()
@@ -341,9 +341,8 @@ extension MainViewController {
         if whereTextField.isFirstResponder {
             textField = whereTextField
         }
-        guard let text = textField.text else { return }
         
-        print("viewcontroller", text)
+        guard let text = textField.text, !text.isEmpty else { return }
         presenter?.prepareSuggestWindow(with: text)
     }
     

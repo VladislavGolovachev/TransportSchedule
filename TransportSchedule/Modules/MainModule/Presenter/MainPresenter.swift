@@ -11,7 +11,7 @@ protocol MainViewProtocol: AnyObject {
     func showAlert(title: String, message: String)
     func updateDate(with: String)
     func stopActivityIndicator()
-    func showOfferTable(with cityNames: [String])
+    func showSuggestedTable(with cityNames: [String])
 }
 
 protocol MainViewPresenterProtocol: AnyObject {
@@ -100,7 +100,7 @@ final class MainPresenter: MainViewPresenterProtocol {
     
     func prepareSuggestWindow(with textToFind: String) {
         let cities = citiesWithSuffix(textToFind)
-        view?.showOfferTable(with: cities)
+        view?.showSuggestedTable(with: cities)
     }
     
     func showScheduleScreen() {
