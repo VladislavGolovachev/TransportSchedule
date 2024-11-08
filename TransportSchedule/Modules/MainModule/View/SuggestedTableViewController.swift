@@ -62,13 +62,18 @@ extension SuggestedTableViewController {
                             cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
                                                  for: indexPath)
-
+        
+        let view = UIView()
+        view.backgroundColor = .lightGray
+        cell.selectedBackgroundView = view
+        cell.backgroundColor = .white
+        
         var config = cell.defaultContentConfiguration()
         if let name = cities?[indexPath.row] {
             config.text = name
         }
+        config.textProperties.color = .black
         cell.contentConfiguration = config
-        cell.backgroundColor = .white
 
         return cell
     }
