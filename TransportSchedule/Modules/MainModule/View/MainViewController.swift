@@ -229,12 +229,17 @@ final class MainViewController: UIViewController {
         view.backgroundColor = Constants.Color.background
         
         let tapGesture = UITapGestureRecognizer(target: self,
-                                         action: #selector(dismissKeyboard))
+                                                action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
         fromTextField.delegate = self
         whereTextField.delegate = self
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(textFieldChanged),
+                                               name: UITextField.textDidChangeNotification,
+                                               object: nil)
         
         addTargets()
         addSubviews()
@@ -269,11 +274,12 @@ extension MainViewController: MainViewProtocol {
         guard let vc = offerTableViewController else { return }
         vc.setCities(cityNames)
         
-        if vc.isBeingPresented {
-            vc.reload()
-        } else {
-            present(vc, animated: true)
-        }
+        present(vc, animated: true)
+//        if vc.isBeingPresented {
+//            vc.reload()
+//        } else {
+//            present(vc, animated: true)
+//        }
     }
     
     func stopActivityIndicator() {
@@ -303,7 +309,6 @@ extension MainViewController: UITextFieldDelegate {
                                                      with: string) {
             return result
         }
-        
         return false
     }
     
@@ -331,6 +336,17 @@ extension MainViewController: UITextFieldDelegate {
 
 //MARK: - Actions
 extension MainViewController {
+    @objc func textFieldChanged() {
+        var textField = fromTextField
+        if whereTextField.isFirstResponder {
+            textField = whereTextField
+        }
+        guard let text = textField.text else { return }
+        
+        print("viewcontroller", text)
+        presenter?.prepareSuggestWindow(with: text)
+    }
+    
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }

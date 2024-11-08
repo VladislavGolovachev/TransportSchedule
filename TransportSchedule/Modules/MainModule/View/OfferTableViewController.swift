@@ -27,6 +27,11 @@ final class OfferTableViewController: UITableViewController {
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: cellIdentifier)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 }
 
 //MARK: - Public Functions
