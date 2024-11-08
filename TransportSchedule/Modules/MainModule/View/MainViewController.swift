@@ -276,7 +276,7 @@ extension MainViewController: MainViewProtocol {
                             y: textField.bounds.maxY)
         
         if suggestedTableViewController == nil {
-            suggestedTableViewController = SuggestedTableViewController()
+            suggestedTableViewController = SuggestedTableViewController(delegate: self)
             suggestedTableViewController?.modalPresentationStyle = .popover
             suggestedTableViewController?.preferredContentSize = CGSize(width: routeMenuView.frame.width,
                                                                         height: 200)
@@ -318,6 +318,16 @@ extension MainViewController: MainViewProtocol {
 extension MainViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
         return .none
+    }
+}
+
+//MARK: - SuggestedTableDelegate
+extension MainViewController: SuggestedTableDelegate {
+    func updateTextField(with text: String) {
+        let firstTextField = (fromTextField.isFirstResponder ? fromTextField : whereTextField)
+        
+        firstTextField.text = text
+        dismissKeyboard()
     }
 }
 

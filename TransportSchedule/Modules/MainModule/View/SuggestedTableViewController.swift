@@ -7,10 +7,21 @@
 
 import UIKit
 
+protocol SuggestedTableDelegate: AnyObject {
+    func updateTextField(with: String)
+}
+
 final class SuggestedTableViewController: UITableViewController {
     //MARK: - Properties
     private let cellIdentifier = "CityCell"
     private var cities: [String]?
+    private weak var delegate: SuggestedTableDelegate?
+    
+    //MARK: - Initializer
+    convenience init(delegate: SuggestedTableDelegate) {
+        self.init()
+        self.delegate = delegate
+    }
     
     //MARK: - UIViewController's lifecycle
     override func viewDidLoad() {
@@ -57,6 +68,7 @@ extension SuggestedTableViewController {
             config.text = name
         }
         cell.contentConfiguration = config
+        cell.backgroundColor = .white
 
         return cell
     }
@@ -67,6 +79,8 @@ extension SuggestedTableViewController {
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        print("selected")
+        
+        guard let text = cities?[indexPath.row] else { return }
+        delegate?.updateTextField(with: text)
     }
 }
