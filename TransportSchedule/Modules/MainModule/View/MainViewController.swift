@@ -8,8 +8,9 @@
 import UIKit
 
 final class MainViewController: UIViewController {
+    //MARK: - Properties
     var presenter: MainViewPresenterProtocol?
-    var cityNames: [String]?
+    var offerTableViewController: OfferTableViewController?
     
     let titleLabel = {
         let label = UILabel()
@@ -220,7 +221,7 @@ final class MainViewController: UIViewController {
         return textField
     }()
     
-    //MARK: ViewController's lifecycle
+    //MARK: - ViewController's lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.downloadCityCodes()
@@ -257,10 +258,22 @@ final class MainViewController: UIViewController {
     }
 }
 
-//MARK: MainViewProtocol
+//MARK: - MainViewProtocol
 extension MainViewController: MainViewProtocol {
     func showOfferTable(with cityNames: [String]) {
-        //FIXME: SHOW POPOVER
+        if offerTableViewController == nil {
+            offerTableViewController = OfferTableViewController(cities: cityNames)
+            offerTableViewController?.preferredContentSize = CGSizeMake(fromTextField.frame.width, 100)
+            offerTableViewController?.modalPresentationStyle = .popover
+        }
+        guard let vc = offerTableViewController else { return }
+        vc.setCities(cityNames)
+        
+        if vc.isBeingPresented {
+            vc.reload()
+        } else {
+            present(vc, animated: true)
+        }
     }
     
     func stopActivityIndicator() {
@@ -280,7 +293,7 @@ extension MainViewController: MainViewProtocol {
     }
 }
 
-//MARK: UITextFieldDelegate
+//MARK: - UITextFieldDelegate
 extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
@@ -303,6 +316,8 @@ extension MainViewController: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        offerTableViewController = nil
+        
         if let lastChar = textField.text?.last, lastChar == " " {
             textField.text?.removeLast()
         }
@@ -314,7 +329,7 @@ extension MainViewController: UITextFieldDelegate {
     }
 }
 
-//MARK: Actions
+//MARK: - Actions
 extension MainViewController {
     @objc func dismissKeyboard() {
         view.endEditing(true)
@@ -433,7 +448,7 @@ extension MainViewController {
     }
 }
 
-//MARK: Private Functions and Variables
+//MARK: - Private Functions and Variables
 extension MainViewController {
     private var selectedTextAttributes: [NSAttributedString.Key: Any] {[
         .font: Constants.Font.common,
@@ -593,7 +608,7 @@ extension MainViewController {
     }
 }
 
-//MARK: Private Local Constants
+//MARK: - Private Local Constants
 extension MainViewController {
     private enum Constants {
         static let switchButtonSize = CGSize(width: 22, height: 22)

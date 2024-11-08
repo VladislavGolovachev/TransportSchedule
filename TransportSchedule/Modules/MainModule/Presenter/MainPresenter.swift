@@ -62,7 +62,9 @@ final class MainPresenter: MainViewPresenterProtocol {
                                             replacement: replacementString)
         if replacementString == "" {
             let cities = citiesWithSuffix(textToFind)
-            view?.showOfferTable(with: cities)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.view?.showOfferTable(with: cities)
+            }
             
             return true
         }
@@ -97,7 +99,9 @@ final class MainPresenter: MainViewPresenterProtocol {
             }
         }
         let cities = citiesWithSuffix(textToFind)
-        view?.showOfferTable(with: cities)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.view?.showOfferTable(with: cities)
+        }
         
         return true
     }
@@ -203,7 +207,10 @@ extension MainPresenter {
 //MARK: Private Functions
 extension MainPresenter {
     private func citiesWithSuffix(_ text: String) -> [String] {
-        return [String]()
+        let cities = cityCodes.keys.filter {
+            $0.hasPrefix(text)
+        }
+        return cities
     }
     
     private func stringAfterChanges(text: String?,
