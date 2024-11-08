@@ -9,6 +9,7 @@ import UIKit
 
 final class MainViewController: UIViewController {
     var presenter: MainViewPresenterProtocol?
+    var cityNames: [String]?
     
     let titleLabel = {
         let label = UILabel()
@@ -258,6 +259,10 @@ final class MainViewController: UIViewController {
 
 //MARK: MainViewProtocol
 extension MainViewController: MainViewProtocol {
+    func showOfferTable(with cityNames: [String]) {
+        //FIXME: SHOW POPOVER
+    }
+    
     func stopActivityIndicator() {
         activityIndicator.stopAnimating()
     }
@@ -280,39 +285,13 @@ extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
-        let forbiddenCharacters = ["\n", ";", ":", "/", ""]
-        if string == "" {
-            return true
-        }
-        if forbiddenCharacters.firstIndex(of: string) != nil {
-            return false
+        if let result = presenter?.validateInputText(textField.text,
+                                                     in: range,
+                                                     with: string) {
+            return result
         }
         
-        ///if the first character is space
-        let index = range.location
-        if index == 0 {
-            if string == " " {
-                return false
-            }
-        } else
-        if let text = textField.text {
-            ///when pushing space after space
-            let stringIndex = text.index(text.startIndex,
-                                         offsetBy: index - 1)
-            if string == " " && (text[stringIndex] == " " || text[stringIndex] == "-") {
-                return false
-            }
-            ///when pushing space before space
-            if let size = textField.text?.count, index < size {
-                let stringIndex = text.index(text.startIndex,
-                                             offsetBy: index)
-                if text[stringIndex] == " " || text[stringIndex] == "-" {
-                    return false
-                }
-            }
-        }
-        
-        return true
+        return false
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

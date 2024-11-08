@@ -11,6 +11,7 @@ protocol MainViewProtocol: AnyObject {
     func showAlert(title: String, message: String)
     func updateDate(with: String)
     func stopActivityIndicator()
+    func showOfferTable(with cityNames: [String])
 }
 
 protocol MainViewPresenterProtocol: AnyObject {
@@ -19,6 +20,9 @@ protocol MainViewPresenterProtocol: AnyObject {
          networkManager: NetworkManagerProtocol)
     
     func showScheduleScreen()
+    func validateInputText(_: String?,
+                           in range: NSRange,
+                           with replacementString: String) -> Bool
     func formatDate(_ date: Date)
     
     func saveDepartureCity(_ city: String?)
@@ -47,6 +51,55 @@ final class MainPresenter: MainViewPresenterProtocol {
         self.view = view
         self.router = router
         self.networkManager = networkManager
+    }
+    
+    func validateInputText(_ text: String?,
+                           in range: NSRange,
+                           with replacementString: String) -> Bool {
+        let forbiddenCharacters = ["\n", ";", ":", "/", "'", "[", "]", "{", "}"]
+        let textToFind = stringAfterChanges(text: text,
+                                            range: range,
+                                            replacement: replacementString)
+        if replacementString == "" {
+            let cities = citiesWithSuffix(textToFind)
+            view?.showOfferTable(with: cities)
+            
+            return true
+        }
+        if forbiddenCharacters.firstIndex(of: replacementString) != nil {
+            return false
+        }
+        
+        ///if the first character is space
+        let index = range.location
+        if index == 0 {
+            if replacementString == " " || replacementString == "-" {
+                return false
+            }
+        } else
+        if let text {
+            ///when pushing space after space
+            let stringIndex = text.index(text.startIndex,
+                                         offsetBy: index - 1)
+            if (replacementString  == " " ||
+                replacementString == "-") &&
+                (text[stringIndex] == " " ||
+                text[stringIndex] == "-") {
+                return false
+            }
+            ///when pushing space before space
+            if index < text.count {
+                let stringIndex = text.index(text.startIndex,
+                                             offsetBy: index)
+                if text[stringIndex] == " " || text[stringIndex] == "-" {
+                    return false
+                }
+            }
+        }
+        let cities = citiesWithSuffix(textToFind)
+        view?.showOfferTable(with: cities)
+        
+        return true
     }
     
     func showScheduleScreen() {
@@ -144,6 +197,32 @@ extension MainPresenter {
         DispatchQueue.main.async {
             self.view?.stopActivityIndicator()
         }
+    }
+}
+
+//MARK: Private Functions
+extension MainPresenter {
+    private func citiesWithSuffix(_ text: String) -> [String] {
+        return [String]()
+    }
+    
+    private func stringAfterChanges(text: String?,
+                                    range: NSRange,
+                                    replacement string: String) -> String {
+        guard var text else {return ""}
+        let start = text.index(text.startIndex,
+                               offsetBy: range.location)
+        let offset = range.location + max(1, range.length) - 1
+        if offset >= text.count {
+            text += string
+        } else {
+            let finish = text.index(text.startIndex,
+                                    offsetBy: offset)
+            text.replaceSubrange(start...finish, with: string)
+        }
+        print(text)
+        
+        return text
     }
 }
 
