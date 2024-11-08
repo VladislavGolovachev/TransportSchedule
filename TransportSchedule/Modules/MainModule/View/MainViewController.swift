@@ -266,20 +266,35 @@ final class MainViewController: UIViewController {
 //MARK: - MainViewProtocol
 extension MainViewController: MainViewProtocol {
     func showSuggestedTable(with cityNames: [String]) {
+        if cityNames.isEmpty {
+            suggestedTableViewController = nil
+            dismiss(animated: true)
+            return
+        }
+        let textField = (fromTextField.isFirstResponder ? fromTextField : whereTextField)
+        let point = CGPoint(x: textField.bounds.minX,
+                            y: textField.bounds.maxY)
+        
         if suggestedTableViewController == nil {
-            suggestedTableViewController = SuggestedTableViewController(cities: cityNames)
-            suggestedTableViewController?.preferredContentSize = CGSizeMake(fromTextField.frame.width, 100)
+            suggestedTableViewController = SuggestedTableViewController()
             suggestedTableViewController?.modalPresentationStyle = .popover
+            suggestedTableViewController?.preferredContentSize = CGSize(width: routeMenuView.frame.width,
+                                                                        height: 200)
+            
+            let popover = suggestedTableViewController?.popoverPresentationController
+            popover?.sourceView = textField
+            popover?.delegate = self
+            popover?.sourceRect = CGRect(origin: point, size: .zero)
+            popover?.permittedArrowDirections = .up
         }
         guard let vc = suggestedTableViewController else { return }
         vc.setCities(cityNames)
         
-        present(vc, animated: true)
-//        if vc.isBeingPresented {
-//            vc.reload()
-//        } else {
-//            present(vc, animated: true)
-//        }
+        if presentedViewController != nil {
+            vc.reload()
+        } else {
+            present(vc, animated: true)
+        }
     }
     
     func stopActivityIndicator() {
@@ -296,6 +311,13 @@ extension MainViewController: MainViewProtocol {
     
     func updateDate(with dateString: String) {
         dateSegmentedControl.setTitle(dateString, forSegmentAt: 2)
+    }
+}
+
+//MARK: - UIPopoverPresentationControllerDelegate
+extension MainViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
     }
 }
 
@@ -322,6 +344,7 @@ extension MainViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         suggestedTableViewController = nil
+        dismiss(animated: true)
         
         if let lastChar = textField.text?.last, lastChar == " " {
             textField.text?.removeLast()
@@ -342,7 +365,12 @@ extension MainViewController {
             textField = whereTextField
         }
         
-        guard let text = textField.text, !text.isEmpty else { return }
+        guard let text = textField.text, !text.isEmpty else {
+            suggestedTableViewController = nil
+            dismiss(animated: true)
+            
+            return
+        }
         presenter?.prepareSuggestWindow(with: text)
     }
     

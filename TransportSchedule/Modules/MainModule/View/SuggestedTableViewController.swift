@@ -12,17 +12,12 @@ final class SuggestedTableViewController: UITableViewController {
     private let cellIdentifier = "CityCell"
     private var cities: [String]?
     
-    //MARK: - Initializer
-    convenience init(cities: [String]) {
-        self.init()
-        self.cities = cities
-    }
-    
     //MARK: - UIViewController's lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         tableView.backgroundColor = .white
+        tableView.separatorStyle = .none
         
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: cellIdentifier)
@@ -69,13 +64,9 @@ extension SuggestedTableViewController {
 
 //MARK: - UITableViewDelegate
 extension SuggestedTableViewController {
-    func tableView(_ tableView: UITableView,
-                willSelectRowAt indexPath: IndexPath) {
-        print("will be selected")
-    }
-    
     override func tableView(_ tableView: UITableView,
                             didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         print("selected")
     }
 }
