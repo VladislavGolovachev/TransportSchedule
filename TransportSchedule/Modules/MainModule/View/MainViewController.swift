@@ -219,6 +219,7 @@ final class MainViewController: UIViewController {
         return textField
     }()
     
+    //MARK: ViewController's lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         presenter?.downloadCityCodes()
@@ -279,33 +280,35 @@ extension MainViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField,
                    shouldChangeCharactersIn range: NSRange,
                    replacementString string: String) -> Bool {
+        let forbiddenCharacters = ["\n", ";", ":", "/", ""]
         if string == "" {
             return true
         }
-        if string == "\n" {
+        if forbiddenCharacters.firstIndex(of: string) != nil {
             return false
         }
         
-        if let text = textField.text {
-            if text.isEmpty {
-                if string == " " {
-                    return false
-                }
-                return true
-            }
-            
-            let index = range.location
-            if index == 0 {
-                if string == " " {
-                    return false
-                } else {
-                    return true
-                }
-            }
-            
-            let stringIndex = text.index(text.startIndex, offsetBy: index - 1)
-            if !text.isEmpty && string == " " && text[stringIndex] == " " {
+        ///if the first character is space
+        let index = range.location
+        if index == 0 {
+            if string == " " {
                 return false
+            }
+        } else
+        if let text = textField.text {
+            ///when pushing space after space
+            let stringIndex = text.index(text.startIndex,
+                                         offsetBy: index - 1)
+            if string == " " && (text[stringIndex] == " " || text[stringIndex] == "-") {
+                return false
+            }
+            ///when pushing space before space
+            if let size = textField.text?.count, index < size {
+                let stringIndex = text.index(text.startIndex,
+                                             offsetBy: index)
+                if text[stringIndex] == " " || text[stringIndex] == "-" {
+                    return false
+                }
             }
         }
         
